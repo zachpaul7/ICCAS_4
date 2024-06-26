@@ -15,8 +15,6 @@ public class BottomBar : MonoBehaviour
     public GameObject[] bfBtns;
     #endregion
 
-    
-
     void Start()
     {
         SwitchTab(2);
@@ -38,6 +36,9 @@ public class BottomBar : MonoBehaviour
 
                 // 선택된 탭의 패널 활성화
                 panels[i].SetActive(true);
+
+                if(i == 1)
+                    UIManager.instance.exUI.OpenExercisePanel(0);
             }
             else
             {

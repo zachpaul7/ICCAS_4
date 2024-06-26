@@ -5,15 +5,18 @@ using UnityEngine;
 public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
+    public BottomBar bB;
+    public ExerciseUI exUI;
 
     private void Awake()
     {
         instance = this;
     }
 
-    #region 아래쪽 메뉴바
-    public BottomBar bB;
-    public int barSelect;
+    #region 각종 필요한 변수
+    public int barSelect;  // 아래 탭 선택
+    public int chapterSelect;  // 챕터 선택
+    public int stageSelect;  // 스테이지 선택
     #endregion
 
     #region
