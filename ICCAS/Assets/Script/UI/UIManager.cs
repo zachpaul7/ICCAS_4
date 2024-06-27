@@ -22,6 +22,7 @@ public class UIManager : MonoBehaviour
     #region
     #endregion
 
+
     public void ClosePanel(GameObject gameObjs)
     {
         gameObjs.SetActive(false);

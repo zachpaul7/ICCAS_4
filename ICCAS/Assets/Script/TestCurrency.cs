@@ -11,7 +11,6 @@ public class TestCurrency : MonoBehaviour
 
     public void CheckValue()
     {
-        Debug.Log("enemyData.name : " + DataBase.instance.enemyData.name);
-        Debug.Log("enemyData.value : " + DataBase.instance.enemyData.value);
+        
     }
 }

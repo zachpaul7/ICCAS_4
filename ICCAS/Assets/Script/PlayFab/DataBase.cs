@@ -23,7 +23,7 @@ public class DataBase : MonoBehaviour
 
     #region 사용할 데이터 변수 선언 및 초기화
     public PlayerData playerData = new PlayerData();
-    public EnemyData enemyData = new EnemyData();
+    public CharacterData enemyData = new CharacterData();
     #endregion
 
     #region 데이터 관리
@@ -75,7 +75,7 @@ public class DataBase : MonoBehaviour
                 }
                 if (key == "DataContent1")
                 {
-                    enemyData = JsonUtility.FromJson<EnemyData>(eachData.Value.Value);
+                    enemyData = JsonUtility.FromJson<CharacterData>(eachData.Value.Value);
 
                     Debug.Log(enemyData);
                 }
@@ -89,14 +89,19 @@ public class DataBase : MonoBehaviour
 [Serializable]
 public struct PlayerData
 {
-    public string name;
-    public int value;
-    public bool isCheck;
+    public int level;
+    public int exp;
+    public int gold;
+    public int curStage;
+    public int topStage;
+
+    // Daily 판단
+    public bool isSurvey;
 }
 
 [Serializable]
-public struct EnemyData
+public struct CharacterData
 {
-    public string name;
-    public int value;
+    public int level;
+    public bool[] skinOpen;
 }
