@@ -18,6 +18,9 @@ public class BottomBar : MonoBehaviour
     void Start()
     {
         SwitchTab(2);
+
+        // 로그인 씬 나누고 주석 풀기
+        //DataBase.instance.AddGold(0);
     }
 
     public void SwitchTab(int index)
@@ -39,6 +42,8 @@ public class BottomBar : MonoBehaviour
 
                 if(i == 1)
                     UIManager.instance.exUI.OpenExercisePanel(0);
+                if (i == 4)
+                    UIManager.instance.chUI.OpenCharacterSelect();
             }
             else
             {
