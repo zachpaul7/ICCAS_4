@@ -10,44 +10,80 @@ public class PlayFabLogin : MonoBehaviour
 {
     public static PlayFabLogin instance;
 
-    public TMP_InputField emailInput, passwardInput, nameInput;
+    public TMP_InputField loginEmail, loginPassword;
+    public TMP_InputField registerEmail, registerPassword, registerName;
     //public string emailInput, passwardInput, nameInput;
     public string myID;
+    public LoginUI loginUI;
 
     private void Awake()
     {
-        if (instance != null)
-            Destroy(this.gameObject);
-        else
-            instance = this;
-
-        DontDestroyOnLoad(gameObject);
+        // 싱글톤 인스턴스 초기화
+        instance = this;
 
         // 테스트용 로그인/회원가입
         //EmailLogin();
-        
-        
     }
 
     public void EmailLogin()
     {
         //InputField로 받아올때 사용
-        var request = new LoginWithEmailAddressRequest { Email = emailInput.text, Password = passwardInput.text };
-        PlayFabClientAPI.LoginWithEmailAddress(request, (result) => { print("로그인 성공"); myID = result.PlayFabId; }, (error) => print("로그인 실패"));
+        if (string.IsNullOrEmpty(PlayFabSettings.staticSettings.TitleId))
+        {
+            PlayFabSettings.staticSettings.TitleId = "AC580";
+        }
+        var request = new LoginWithEmailAddressRequest { Email = loginEmail.text, Password = loginPassword.text };
+        PlayFabClientAPI.LoginWithEmailAddress(request, OnLoginSuccess, OnLoginFailure);
 
         //테스트용 
         //var request = new LoginWithEmailAddressRequest { Email = emailInput, Password = passwardInput };
         //PlayFabClientAPI.LoginWithEmailAddress(request, (result) => { print("로그인 성공"); myID = result.PlayFabId; DataBase.instance.GetUserData(); }, (error) => { print("로그인 실패"); EmailRegister(); });
+
     }
 
     public void EmailRegister()
     {
         //InputField로 받아올때 사용
-        var request = new RegisterPlayFabUserRequest { Email = emailInput.text, Password = passwardInput.text, Username = nameInput.text };
-        PlayFabClientAPI.RegisterPlayFabUser(request, (result) => print("회원가입 성공"), (error) => print("회원가입 실패"));
+        if (string.IsNullOrEmpty(PlayFabSettings.staticSettings.TitleId))
+        {
+            PlayFabSettings.staticSettings.TitleId = "AC580";
+        }
+        var request = new RegisterPlayFabUserRequest { Email = registerEmail.text, Password = registerPassword.text, Username = registerName.text };
+        PlayFabClientAPI.RegisterPlayFabUser(request, OnRegisterSuccess, OnRegisterFailure);
 
         //테스트용 
         //var request = new RegisterPlayFabUserRequest { Email = emailInput, Password = passwardInput, Username = nameInput };
-        //PlayFabClientAPI.RegisterPlayFabUser(request, (result) => { print("회원가입 성공"); EmailLogin(); }, (error) => print("회원가입 실패"));
+        //PlayFabClientAPI.RegisterPlayFabUser(request, (result) => { print("회원가입 성공"); EmailLogin(); }, (error) => { print("회원가입 실패"); });
+
     }
+
+    private void OnLoginSuccess(LoginResult result)
+    {
+        // ID 저장
+        myID = result.PlayFabId; 
+
+        // DataBase에 플레이어 정보 가져오기
+        DataBase.instance.GetUserData();
+
+        Debug.Log("로그인 성공");
+    }
+
+    private void OnLoginFailure(PlayFabError error)
+    {
+
+        loginUI.LoginPanel(0);
+        Debug.Log("로그인 실패");
+    }
+
+    private void OnRegisterSuccess(RegisterPlayFabUserResult result)
+    {
+        Debug.Log("회원가입 성공");
+    }
+
+    private void OnRegisterFailure(PlayFabError error)
+    {
+        loginUI.SignUpPanel(0);
+        Debug.Log("회원가입 실패");
+    }
+
 }

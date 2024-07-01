@@ -15,7 +15,7 @@ MonoBehaviour:
   TitleId: AC580
   DeveloperSecretKey: DJPH7YMSYB9IIOY8NOBIQZ4JT8KOQKWURS3SFOK5WP9Q1UPGII
   ProductionEnvironmentUrl: 
-  RequestType: 0
+  RequestType: 2
   DisableDeviceInfo: 0
   DisableFocusTimeCollection: 0
   RequestTimeout: 2000
