@@ -25,19 +25,24 @@ public class LobbyUI : MonoBehaviour
     public GameObject optionPanel;
     #endregion
 
+    #region 결과값
+    public GameObject resultPanel;
+    public GameObject resultPrefab;
+    public GameObject[] resultPrefabs;
+    #endregion
+
     #region Lobby 초기 세팅
     public void InitLobbyUI()
     {
         profile.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = DataBase.instance.playerData.nickName;
-        profile.transform.GetChild(3).GetComponent<TextMeshProUGUI>().text = "Lv. " + DataBase.instance.playerData.level;
+        DataBase.instance.AddPlayerLv(0);
     }
     #endregion
 
     #region 프로필 패널
     public void OpenProfilePanel()
     {
-        profilePanel.transform.GetChild(1).GetChild(2).GetChild(1).GetComponent<TextMeshProUGUI>().text = DataBase.instance.playerData.nickName;
-        profilePanel.transform.GetChild(1).GetChild(2).GetChild(2).GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = DataBase.instance.playerData.level.ToString();
+        InitLobbyUI();
 
         profilePanel.SetActive(true);
     }
@@ -112,6 +117,29 @@ public class LobbyUI : MonoBehaviour
         optionPanel.transform.GetChild(1).GetChild(2).GetChild(0).GetChild(1).GetChild(2).GetComponent<Toggle>().isOn = DataBase.instance.settingInfo.optionToggle[1];
 
         optionPanel.SetActive(true);
+    }
+    #endregion
+
+    #region 결과 보기
+    public void SetResult()
+    {
+        resultPrefabs = new GameObject[DataBase.instance.playerData.daily];
+
+        for(int i = 0; i < DataBase.instance.playerData.daily; i++)
+        {
+            resultPrefabs[i] = Instantiate(resultPrefab, resultPanel.transform.GetChild(1).GetChild(2).GetChild(0).GetChild(0).GetChild(0).transform);
+
+            resultPrefabs[i].transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Day " + (i + 1);
+            resultPrefabs[i].transform.GetChild(2).GetChild(0).GetComponent<Image>().fillAmount = (float)DataBase.instance.selfCheckScores.checkScore[i] / 7;
+            resultPrefabs[i].transform.GetChild(2).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = DataBase.instance.selfCheckScores.checkScore[i]  + "/7";
+        }
+    }
+
+    public void OpenResult()
+    {
+        SetResult();
+
+        resultPanel.SetActive(true);
     }
     #endregion
 }

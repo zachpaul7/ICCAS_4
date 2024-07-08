@@ -25,6 +25,13 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI[] clLevel0;
     public TextMeshProUGUI[] clLevel1;
     public TextMeshProUGUI[] clLevel2;
+
+    // 플레이어 레벨 텍스트
+    public TextMeshProUGUI[] playerLv;
+    public GameObject[] playerLvBar;
+    public GameObject playerLvPanel;
+    public TextMeshProUGUI playerLvPanelText;
+
     #endregion
 
     #region 각종 필요한 변수

@@ -56,6 +56,12 @@ public class ExerciseUI : MonoBehaviour
     [Header("스테이지 클리어 / 실패")]
     public GameObject stageClearSuccessPanel;
     public GameObject stageClearFailedPanel;
+
+    // 스테이지 보상 텍스트
+    public TextMeshProUGUI[] stageExpReward;
+    public TextMeshProUGUI[] stageGoldReward;
+
+    public TextMeshProUGUI[] stageClearReward;
     #endregion
 
     #region 챕터 설정
@@ -222,6 +228,7 @@ public class ExerciseUI : MonoBehaviour
     public void SelectStage(int stageNum)
     {
         stageSelect = (chapterSelect * 5) + (stageNum);
+
         if (chapterSelect < (DataBase.instance.playerData.topStage / 5))
         {
             for (int i = 0; i < 5; i++)
@@ -261,7 +268,9 @@ public class ExerciseUI : MonoBehaviour
             }
         }
 
+        Debug.Log("chapterSelect = " + chapterSelect + " stageSelect = " + stageSelect);
         SetStageText(chapterSelect, stageNum);
+        StageRewardText(chapterSelect, stageSelect);
     }
 
     public void SelectStageIcon(int index, int stageNum)
@@ -297,6 +306,13 @@ public class ExerciseUI : MonoBehaviour
             stageText[chapterNum].text = "STAGE " + (stageNum + 1);
     }
 
+    // 각 스테이지별 보상 텍스트 세팅
+    public void StageRewardText(int chapterNum, int stageNum)
+    {
+        stageExpReward[chapterNum].text = DataBase.instance.playerInfo.rewardExp[stageNum].ToString();
+        stageGoldReward[chapterNum].text = DataBase.instance.enemyInfos[stageNum].gold.ToString();
+    }
+
     private void UnlockStage(int index)
     {
         int chapterNum = DataBase.instance.playerData.topStage / 5;
@@ -327,6 +343,13 @@ public class ExerciseUI : MonoBehaviour
     #endregion
 
     #region 운동 준비 - 패널 세팅
+    // tmxpdlwl
+    public void StageClearRewardText(int stageNum)
+    {
+        stageClearReward[0].text = DataBase.instance.playerInfo.rewardExp[stageNum].ToString();
+        stageClearReward[1].text = DataBase.instance.enemyInfos[stageNum].gold.ToString();
+    }
+
     public void OpenExercisPanel()
     {
         for (int i = 0; i < GameManager.instance.pc.Length; i++)
@@ -376,8 +399,6 @@ public class ExerciseUI : MonoBehaviour
         exerciseSelectPanel.SetActive(false);
         exerciseExplainPanel[index].SetActive(true);
     }
-
-
     #endregion
 
     #region 운동 플레이 - 공격, HP세팅
@@ -467,8 +488,13 @@ public class ExerciseUI : MonoBehaviour
     #endregion
 
     #region 운동 종료 - 클리어 성공/실패
+    
+
     public void StageClearSuccess()
     {
+        // 패널 열기전에 보상 세팅하기
+        StageClearRewardText(stageSelect);
+
         // 스테이지 클리어 패널 열기
         stageClearSuccessPanel.SetActive(true);
 
@@ -494,6 +520,33 @@ public class ExerciseUI : MonoBehaviour
         GameManager.instance.pc[DataBase.instance.playerData.cSelect].SetActive(false);
         GameManager.instance.ec[stageSelect].SetActive(false);
         exercisePanel.SetActive(false);
+    }
+
+    public void OnClickContinue(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                stageClearSuccessPanel.SetActive(false);
+                StageRewardAccept(stageSelect);
+
+                UnlockChpater();
+                UnlockStage(DataBase.instance.playerData.topStage);
+                SelectStage(DataBase.instance.playerData.topStage % 5);
+
+                break;
+
+            case 1:
+                stageClearFailedPanel.SetActive(false);
+                break;
+        }
+    }
+
+    // 각 스테이지별 보상 수령
+    public void StageRewardAccept(int stageNum)
+    {
+        DataBase.instance.AddPlayerLv(DataBase.instance.playerInfo.rewardExp[stageNum]);
+        DataBase.instance.AddGold(DataBase.instance.enemyInfos[stageNum].gold);
     }
     #endregion
 }

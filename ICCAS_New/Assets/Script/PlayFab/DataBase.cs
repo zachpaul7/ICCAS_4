@@ -8,10 +8,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
+using TMPro;
 using UnityEditor;
 using UnityEditor.PackageManager;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DataBase : MonoBehaviour
 {
@@ -50,6 +52,7 @@ public class DataBase : MonoBehaviour
     public void Initialized()
     {
         AddGold(0);
+        AddPlayerLv(0);
 
         try
         {
@@ -151,6 +154,7 @@ public class DataBase : MonoBehaviour
     public SettingInfo settingInfo;
     public List<CharacterInfo> characterInfos = new List<CharacterInfo>();
     public List<EnemyInfo> enemyInfos = new List<EnemyInfo>();
+    public PlayerInfo playerInfo;
 
     [ContextMenu("To Json Data")]
     void SavePlayerDataToJson()
@@ -169,6 +173,10 @@ public class DataBase : MonoBehaviour
 
         jsonData = JsonMapper.ToJson(enemyInfos);
         path = Path.Combine(Application.dataPath, "Data/EnemyInfo.json");
+        File.WriteAllText(path, jsonData);
+
+        jsonData = JsonMapper.ToJson(playerInfo);
+        path = Path.Combine(Application.dataPath, "Data/PlayerInfo.json");
         File.WriteAllText(path, jsonData);
 
         Debug.Log("저장 완료");
@@ -193,6 +201,10 @@ public class DataBase : MonoBehaviour
         jsonData = data.ToString();
         enemyInfos = JsonMapper.ToObject<List<EnemyInfo>>(jsonData);
 
+        data = Resources.Load<TextAsset>("Data/PlayerInfo");
+        jsonData = data.ToString();
+        playerInfo = JsonMapper.ToObject<PlayerInfo>(jsonData);
+
         Debug.Log("로드 완료");
     }
     #endregion
@@ -203,6 +215,31 @@ public class DataBase : MonoBehaviour
         playerData.gold += amount;
         for (int i = 0; i < UIManager.instance.goldText.Length; i++)
             UIManager.instance.goldText[i].text = playerData.gold.ToString();
+    }
+
+    public void AddPlayerLv(int amount)
+    {
+        int prevPLv = playerData.level;
+
+        playerData.exp += amount;
+
+        while (playerInfo.maxExp[playerData.level] <= playerData.exp)
+        {
+            playerData.exp -= playerInfo.maxExp[playerData.level];
+            playerData.level++;
+        }
+
+        UIManager.instance.playerLv[0].text = "Lv. " + playerData.level;
+        UIManager.instance.playerLv[1].text = playerData.level.ToString();
+
+        UIManager.instance.playerLvBar[0].GetComponent<Image>().fillAmount = (float)playerData.exp / playerInfo.maxExp[playerData.level];
+        UIManager.instance.playerLvBar[1].GetComponent<TextMeshProUGUI>().text = playerData.exp + " / " + playerInfo.maxExp[playerData.level];
+
+        if(prevPLv < playerData.level)
+        {
+            UIManager.instance.playerLvPanel.SetActive(true);
+            UIManager.instance.playerLvPanelText.text = playerData.level.ToString();
+        }
     }
 
     public void AddCharacterLv(int index, int amount)
@@ -228,6 +265,8 @@ public class DataBase : MonoBehaviour
         UIManager.instance.clLevel1[index].text = (characterData.level[index] + 1).ToString();
         UIManager.instance.clLevel2[index].text = "Lv. " + (characterData.level[index] + 1);
     }
+
+    
     #endregion
 
     #region SelfCheckScore 추가 로직
@@ -239,6 +278,8 @@ public class DataBase : MonoBehaviour
         {
             selfCheckScores.checkScore.RemoveAt(0); // 가장 오래된 데이터를 삭제합니다.
         }
+
+        playerData.daily += 1;
 
         SaveData(); // 업데이트된 데이터를 PlayFab에 저장합니다.
     }
@@ -260,7 +301,7 @@ public struct PlayerData
     public int cSelect;  // 캐릭터 Select
 
     [Header("Daily")]
-    public bool isSurvey;
+    public int daily;
     public string lastSurveyDate;
 
     [Header("인벤토리")]
@@ -297,6 +338,25 @@ public struct CharacterInfo
         {
             maxHp[i] = int.Parse(data["maxHp"][i].ToString());
             damage[i] = int.Parse(data["damage"][i].ToString());
+        }
+    }
+}
+
+[Serializable]
+public struct PlayerInfo
+{
+    public int[] maxExp;
+    public int[] rewardExp;
+
+    public PlayerInfo(JsonData data)
+    {
+        maxExp = new int[data["maxExp"].Count];
+        rewardExp = new int[data["rewardExp"].Count];
+
+        for (int i = 0; i < maxExp.Length; i++)
+        {
+            maxExp[i] = int.Parse(data["maxExp"][i].ToString());
+            rewardExp[i] = int.Parse(data["rewardExp"][i].ToString());
         }
     }
 }

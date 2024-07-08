@@ -66,7 +66,6 @@ public class CharacterUI : MonoBehaviour
     {
         for(int i = 0; i < characterObjs.Length; i++)
         {
-            Debug.Log(DataBase.instance.characterData.characterOpen[i]);
             if (DataBase.instance.characterData.characterOpen[i] == true)
             {
                 characterObjs[i].transform.GetChild(1).gameObject.SetActive(false);
