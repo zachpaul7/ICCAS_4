@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -123,8 +123,9 @@ public class VNectModel : MonoBehaviour
     public float ZScale = 0.8f;
 
  bool stretchingInProgress = false;
-    Vector3 originalHeadPos, originalNeckPos, originalSpinePos;
+    Vector3 originalHeadPos;
     float startAngle;
+    private int timeCount = 0; //  운동횟수를 저장할 변수 추가
     private int successCount = 0; // 성공 횟수를 저장할 변수 추가
 
     private void Update()
@@ -132,7 +133,7 @@ public class VNectModel : MonoBehaviour
         if (jointPoints != null)
         {
             PoseUpdate(); // 기존의 PoseUpdate 메서드 호출
-
+            
             // 10초 후에 스트레칭 동작을 체크하는 메서드 호출
             if (Time.timeSinceLevelLoad > 10f && !stretchingInProgress)
             {
@@ -147,50 +148,50 @@ public class VNectModel : MonoBehaviour
         if (!stretchingInProgress)
         {
             originalHeadPos = jointPoints[PositionIndex.head.Int()].Pos3D;
-            originalNeckPos = jointPoints[PositionIndex.neck.Int()].Pos3D;
-            originalSpinePos = jointPoints[PositionIndex.spine.Int()].Pos3D;
             stretchingInProgress = true;
-            startAngle = CalculateAngle(originalHeadPos, originalNeckPos, originalSpinePos);
-            Debug.Log("스트레칭 동작 시작! 시작 각도: " + startAngle.ToString("F1") + "도");
             StartCoroutine(StretchingCoroutine());
         }
     }
 
     IEnumerator StretchingCoroutine()
     {
+        yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
         Debug.Log("전신이 보이게 제대로 서주세요");
-        yield return new WaitForSeconds(10f); // 10초간 대기
-        Debug.Log("고개를 숙여주세요");
-        yield return new WaitForSeconds(2f); // 10초간 대기
+        Debug.Log("스트레칭을 시작해볼까요?");
 
-        // 10초 후의 자세 확인
-        float currentAngle = CalculateAngle(jointPoints[PositionIndex.head.Int()].Pos3D,
-                                            jointPoints[PositionIndex.neck.Int()].Pos3D,
-                                            jointPoints[PositionIndex.spine.Int()].Pos3D);
+        while (timeCount < 5) 
+        {
+            Debug.Log("고개를 숙여주세요");
+        yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
+        Vector3 currentHeadPos = jointPoints[PositionIndex.head.Int()].Pos3D; // 현재 눈 위치 확인
+        yield return new WaitForSeconds(10f); // 동작 수행시간 10초간 대기
+
 
         // 원래 자세로 복귀
-        if (currentAngle > startAngle)
+        if (currentHeadPos.y >= originalHeadPos.y)
         {
-            Debug.Log("자세를 올바르지 못했어요!");
+            Debug.Log("자세를 올바르지 못했어요! 고개를 충분히 숙이지 않았습니다.");
         }
         else
         {
             Debug.Log("잘했어요!");
             successCount++;
         }
+        timeCount++;
+        Debug.Log("고개를 들어주세요");
         yield return new WaitForSeconds(5f);
-
-        if (successCount >= 3)
-        {
-            Debug.Log("스트레칭을 3번 반복하여 모두 잘했습니다! 성공입니다!");
+        
         }
+        
+        if (successCount >= 5)
+            {
+            Debug.Log("모두 잘했습니다! 성공입니다!");
+            }
         else
-        {
-            Debug.Log("아직 모든 스트레칭을 성공하지 못했습니다. 조금만 더 노력해봐요!");
-        }
-
-        // 다시 시도할 수 있도록 설정
-        stretchingInProgress = false;
+            {
+            Debug.Log("다음엔 좀 더 잘해봐요!!");
+            }
+            
     }
 
     float CalculateAngle(Vector3 headPos, Vector3 neckPos, Vector3 spinePos)
