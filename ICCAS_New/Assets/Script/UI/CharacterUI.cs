@@ -2,25 +2,34 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class CharacterUI : MonoBehaviour
 {
-    #region 캐릭터
     public int characterSelect = 0;
 
-    // 캐릭터 선택 및 업그레이드 패널
+    #region 캐릭터 선택 및 업그레이드 패널
+    [Header("캐릭터 선택 및 업그레이드 패널")]
     public GameObject[] characterObjs;
     public GameObject[] characterPanels;
     public GameObject[] lobbyCharacter;
+    #endregion
 
-    // 캐릭터 언락 & 업그레이드
+    #region 캐릭터 언락 & 업그레이드
+    [Header("캐릭터 언락 & 업그레이드")]
     public GameObject characterUnlock;
     public GameObject[] nMaxLv0;
     public GameObject[] yMaxLv0;
     public GameObject[] nMaxLv1;
     public GameObject[] yMaxLv1;
+    #endregion
+
+    #region 캐릭터 업그레이드
+    [Header("캐릭터 업그레이드 세팅")]
+    public TextMeshProUGUI[] characterHp;
+    public TextMeshProUGUI[] characterAtk;
     #endregion
 
     public void OpenCharacterSelect()
@@ -84,7 +93,9 @@ public class CharacterUI : MonoBehaviour
     {
         characterSelect = index;
 
-        for(int i = 0; i < characterPanels.Length; i++)
+        SetUpgradeText(index);
+
+        for (int i = 0; i < characterPanels.Length; i++)
         {
             if(i == index)
                 characterPanels[i].SetActive(true);
@@ -123,7 +134,8 @@ public class CharacterUI : MonoBehaviour
     {
         DataBase.instance.playerData.cSelect = index;
 
-        for(int i = 0; i < characterObjs.Length; i++)
+
+        for (int i = 0; i < characterObjs.Length; i++)
         {
             if(i == index)
             {
@@ -134,6 +146,15 @@ public class CharacterUI : MonoBehaviour
                 lobbyCharacter[i].SetActive(false);
             }
         }
+    }
+    #endregion
+
+    #region 캐릭터 업그레이드
+
+    public void SetUpgradeText(int index)
+    {
+        characterHp[index].text = DataBase.instance.characterInfos[index].maxHp[DataBase.instance.characterData.level[index]].ToString();
+        characterAtk[index].text = DataBase.instance.characterInfos[index].damage[DataBase.instance.characterData.level[index]].ToString();
     }
 
     public void UpgradeCharacter(int index)
@@ -149,10 +170,9 @@ public class CharacterUI : MonoBehaviour
             return;
         }
 
-        Debug.Log(-DataBase.instance.upgradeData[characterSelect].upgradeGold);
-
         DataBase.instance.AddGold(-DataBase.instance.upgradeData[characterSelect].upgradeGold);
         DataBase.instance.AddCharacterLv(index, 1);
+        SetUpgradeText(index);
 
         Debug.Log("정상적으로 업그레이드 되었습니다.");
     }

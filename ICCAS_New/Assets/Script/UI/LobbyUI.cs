@@ -124,14 +124,21 @@ public class LobbyUI : MonoBehaviour
     public void SetResult()
     {
         resultPrefabs = new GameObject[DataBase.instance.playerData.daily];
+        int startDay = 0;
 
-        for(int i = 0; i < DataBase.instance.playerData.daily; i++)
+        if (DataBase.instance.playerData.daily >= 30)
+            startDay = DataBase.instance.playerData.daily - 30;
+        else
+            startDay = 0;
+
+        for (int i = 0; i < 30; i++)
         {
             resultPrefabs[i] = Instantiate(resultPrefab, resultPanel.transform.GetChild(1).GetChild(2).GetChild(0).GetChild(0).GetChild(0).transform);
 
-            resultPrefabs[i].transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Day " + (i + 1);
+            resultPrefabs[i].transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Day " + (startDay + i + 1);
+            
             resultPrefabs[i].transform.GetChild(2).GetChild(0).GetComponent<Image>().fillAmount = (float)DataBase.instance.selfCheckScores.checkScore[i] / 7;
-            resultPrefabs[i].transform.GetChild(2).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = DataBase.instance.selfCheckScores.checkScore[i]  + "/7";
+            resultPrefabs[i].transform.GetChild(2).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = DataBase.instance.selfCheckScores.checkScore[i] + "/7";
         }
     }
 
