@@ -207,10 +207,11 @@ public class VNectBarracudaRunner : MonoBehaviour
         yield return new WaitForSeconds(WaitTimeModelLoad);
 
         // Init VideoCapture
-        videoCapture.Init(InputImageSize, InputImageSize);
+        videoCapture.Init(InputImageSize, InputImageSize, InputImageSize, InputImageSize);
         Lock = false;
         Msg.gameObject.SetActive(false);
     }
+
 
     private const string inputName_1 = "input.1";
     private const string inputName_2 = "input.4";

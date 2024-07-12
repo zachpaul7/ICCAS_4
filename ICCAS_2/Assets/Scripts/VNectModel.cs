@@ -122,13 +122,394 @@ public class VNectModel : MonoBehaviour
     private float prevTall = 224 * 0.75f;
     public float ZScale = 0.8f;
 
+    bool stretchingInProgress = false;
+    Vector3 originalHeadPos;
+    Vector3 original_lEarPos;
+    Vector3 original_rEarPos;
+    float startAngle;
+
+    private int timeCount = 0; //  운동횟수를 저장할 변수 추가
+    private int successCount = 0; // 성공 횟수를 저장할 변수 추가
+    private int lEar_timeCount = 0; //  운동횟수를 저장할 변수 추가
+    private int rEar_timeCount = 0; //  운동횟수를 저장할 변수 추가
+
     private void Update()
     {
         if (jointPoints != null)
         {
-            PoseUpdate();
+            PoseUpdate(); // 기존의 PoseUpdate 메서드 호출
+
+            // 10초 후에 스트레칭 동작을 체크하는 메서드 호출
+            if (Time.timeSinceLevelLoad > 10f && !stretchingInProgress)
+            {
+                CheckStretchingPose();
+            }
         }
     }
+
+    private void CheckStretchingPose()
+    {
+        // 초기 자세 저장
+        if (!stretchingInProgress)
+        {
+            originalHeadPos = jointPoints[PositionIndex.head.Int()].Pos3D;
+            original_lEarPos = jointPoints[PositionIndex.lEar.Int()].Pos3D;
+            original_rEarPos = jointPoints[PositionIndex.rEar.Int()].Pos3D;
+            stretchingInProgress = true;
+            StartCoroutine(StretchingCoroutine3());
+        }
+    }
+
+    IEnumerator StretchingCoroutine0() // 고개 숙이기 스트레칭
+    {
+        yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
+        Debug.Log("전신이 보이게 제대로 서주세요");
+        yield return new WaitForSeconds(5f); // 자세 준비시간 2초간 대기
+        Debug.Log("스트레칭을 시작해볼까요?");
+        yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
+
+        while (timeCount < 3)
+        {
+            Debug.Log("고개를 숙여주세요");
+            yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
+            Vector3 currentHeadPos = jointPoints[PositionIndex.head.Int()].Pos3D; // 현재 눈 위치 확인
+            yield return new WaitForSeconds(10f); // 동작 수행시간 10초간 대기
+
+
+            // 원래 자세로 복귀
+            if (currentHeadPos.y >= originalHeadPos.y)
+            {
+                Debug.Log("자세를 올바르지 못했어요! 고개를 충분히 숙이지 않았습니다.");
+            }
+            else
+            {
+                Debug.Log("잘했어요!");
+                successCount++;
+            }
+            timeCount++;
+            Debug.Log("고개를 들어주세요");
+            yield return new WaitForSeconds(5f);
+
+        }
+
+        if (successCount >= 2)
+        {
+            Debug.Log("모두 잘했습니다! 성공입니다!");
+        }
+        else
+        {
+            Debug.Log("다음엔 좀 더 잘해봐요!!");
+        }
+
+
+    }
+
+    IEnumerator StretchingCoroutine1() // 옆목 스트레칭
+    {
+        yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
+        Debug.Log("전신이 보이게 제대로 서주세요");
+        yield return new WaitForSeconds(5f); // 자세 준비시간 2초간 대기
+        Debug.Log("스트레칭을 시작해볼까요?");
+        yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
+
+        while (timeCount < 6)
+        {
+            if (lEar_timeCount == rEar_timeCount)
+            {
+                Debug.Log("목을 왼쪽으로 늘려주세요");
+                yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
+                Vector3 current_lEarPos = jointPoints[PositionIndex.lEar.Int()].Pos3D; // 현재 왼쪽 귀 위치 확인
+                Vector3 current_rEarPos = jointPoints[PositionIndex.rEar.Int()].Pos3D; // 현재 왼쪽 귀 위치 확인
+                yield return new WaitForSeconds(10f); // 동작 수행시간 10초간 대기
+
+                // 원래 자세로 복귀
+                if (current_lEarPos.y >= original_lEarPos.y)
+                {
+                    Debug.Log("자세가 올바르지 못했어요!");
+                }
+                else
+                {
+                    Debug.Log("잘했어요!");
+                    successCount++;
+                }
+                lEar_timeCount++;
+                Debug.Log("고개를 바로 해주세요");
+                yield return new WaitForSeconds(5f);
+            }
+            else
+            {
+                Debug.Log("목을 오른쪽으로 늘려주세요");
+                yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
+                Vector3 current_lEarPos = jointPoints[PositionIndex.lEar.Int()].Pos3D; // 현재 왼쪽 귀 위치 확인
+                Vector3 current_rEarPos = jointPoints[PositionIndex.rEar.Int()].Pos3D; // 현재 왼쪽 귀 위치 확인
+                yield return new WaitForSeconds(10f); // 동작 수행시간 10초간 대기
+
+                // 원래 자세로 복귀
+                if (current_rEarPos.y >= original_rEarPos.y)
+                {
+                    Debug.Log("자세가 올바르지 못했어요!");
+                }
+                else
+                {
+                    Debug.Log("잘했어요!");
+                    successCount++;
+                }
+                rEar_timeCount++;
+                Debug.Log("고개를 바로 해주세요");
+                yield return new WaitForSeconds(5f);
+            }
+        }
+
+        if (successCount >= 5)
+        {
+            Debug.Log("모두 잘했습니다! 성공입니다!");
+        }
+        else
+        {
+            Debug.Log("다음엔 좀 더 잘해봐요!!");
+        }
+
+    }
+
+    IEnumerator StretchingCoroutin2() // 사이드 스트레칭
+    {
+        yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
+        Debug.Log("전신이 보이게 제대로 서주세요");
+        yield return new WaitForSeconds(5f); // 자세 준비시간 2초간 대기
+        Debug.Log("스트레칭을 시작해볼까요?");
+        yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
+
+        while (timeCount < 4)
+        {
+            if (lEar_timeCount == rEar_timeCount)
+            {
+                Debug.Log("허리를 왼쪽으로 굽혀주세요");
+                yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
+                Vector3 current_lEarPos = jointPoints[PositionIndex.lEar.Int()].Pos3D; // 현재 왼쪽 귀 위치 확인
+                Vector3 current_rEarPos = jointPoints[PositionIndex.rEar.Int()].Pos3D; // 현재 왼쪽 귀 위치 확인
+                yield return new WaitForSeconds(10f); // 동작 수행시간 10초간 대기
+
+                // 원래 자세로 복귀
+                if (current_lEarPos.y >= original_lEarPos.y)
+                {
+                    Debug.Log("자세가 올바르지 못했어요!");
+                }
+                else
+                {
+                    Debug.Log("잘했어요!");
+                    successCount++;
+                }
+                lEar_timeCount++;
+                Debug.Log("고개를 바로 해주세요");
+                yield return new WaitForSeconds(5f);
+            }
+            else
+            {
+                Debug.Log("허리를 오른쪽으로 굽혀주세요");
+                yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
+                Vector3 current_lEarPos = jointPoints[PositionIndex.lEar.Int()].Pos3D; // 현재 왼쪽 귀 위치 확인
+                Vector3 current_rEarPos = jointPoints[PositionIndex.rEar.Int()].Pos3D; // 현재 왼쪽 귀 위치 확인
+                yield return new WaitForSeconds(10f); // 동작 수행시간 10초간 대기
+
+                // 원래 자세로 복귀
+                if (current_rEarPos.y >= original_rEarPos.y)
+                {
+                    Debug.Log("자세가 올바르지 못했어요!");
+                }
+                else
+                {
+                    Debug.Log("잘했어요!");
+                    successCount++;
+                }
+                rEar_timeCount++;
+                Debug.Log("고개를 바로 해주세요");
+                yield return new WaitForSeconds(5f);
+            }
+        }
+
+        if (successCount >= 5)
+        {
+            Debug.Log("모두 잘했습니다! 성공입니다!");
+        }
+        else
+        {
+            Debug.Log("다음엔 좀 더 잘해봐요!!");
+        }
+
+    }
+    IEnumerator StretchingCoroutine3() // 서서 허리 젖히기
+    {
+        yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
+        Debug.Log("전신이 보이게 측면으로 제대로 서주세요");
+        yield return new WaitForSeconds(5f); // 자세 준비시간 2초간 대기
+        Debug.Log("스트레칭을 시작해볼까요?");
+        yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
+
+        while (timeCount < 5)
+        {
+            Debug.Log("몸을 뒤로 젖혀주세요");
+            yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
+            yield return new WaitForSeconds(5f); // 동작 수행시간 10초간 대기
+            float currentAngle = CalculateAngle(jointPoints[PositionIndex.lShldrBend.Int()].Pos3D,
+                                                jointPoints[PositionIndex.lThighBend.Int()].Pos3D,
+                                                jointPoints[PositionIndex.lShin.Int()].Pos3D);
+            yield return new WaitForSeconds(5f); // 동작 수행시간 10초간 대기
+
+
+            // 원래 자세로 복귀
+            if (currentAngle > 160)
+            {
+                Debug.Log("자세를 올바르지 못했어요!");
+            }
+            else
+            {
+                Debug.Log("잘했어요!");
+                successCount++;
+            }
+            timeCount++;
+            Debug.Log("시작자세로 돌아와주세요");
+            yield return new WaitForSeconds(5f);
+
+        }
+
+        if (successCount >= 4)
+        {
+            Debug.Log("모두 잘했습니다! 성공입니다!");
+        }
+        else
+        {
+            Debug.Log("다음엔 좀 더 잘해봐요!!");
+        }
+
+
+    }
+
+    IEnumerator StretchingCoroutine4() // 상체내리기
+    {
+        yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
+        Debug.Log("전신이 보이게 측면으로 제대로 서주세요");
+        yield return new WaitForSeconds(5f); // 자세 준비시간 2초간 대기
+        Debug.Log("스트레칭을 시작해볼까요?");
+        yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
+
+        while (timeCount < 3)
+        {
+            Debug.Log("상체를 내려주세요");
+            yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
+            yield return new WaitForSeconds(5f); // 동작 수행시간 10초간 대기
+            float currentAngle = CalculateAngle(jointPoints[PositionIndex.lShldrBend.Int()].Pos3D,
+                                                jointPoints[PositionIndex.lThighBend.Int()].Pos3D,
+                                                jointPoints[PositionIndex.lShin.Int()].Pos3D);
+            yield return new WaitForSeconds(5f); // 동작 수행시간 10초간 대기
+
+
+            // 원래 자세로 복귀
+            if (currentAngle > 90)
+            {
+                Debug.Log("자세를 올바르지 못했어요!");
+            }
+            else
+            {
+                Debug.Log("잘했어요!");
+                successCount++;
+            }
+            timeCount++;
+            Debug.Log("시작자세로 돌아와주세요");
+            yield return new WaitForSeconds(5f);
+
+        }
+
+        if (successCount >= 4)
+        {
+            Debug.Log("모두 잘했습니다! 성공입니다!");
+        }
+        else
+        {
+            Debug.Log("다음엔 좀 더 잘해봐요!!");
+        }
+
+
+    }
+
+
+
+    IEnumerator StretchingCoroutin5() // 반달자세
+    {
+        yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
+        Debug.Log("전신이 보이게 제대로 서주세요");
+        yield return new WaitForSeconds(5f); // 자세 준비시간 2초간 대기
+        Debug.Log("스트레칭을 시작해볼까요?");
+        yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
+
+        while (timeCount < 4)
+        {
+            if (lEar_timeCount == rEar_timeCount)
+            {
+                Debug.Log("상체를 왼쪽으로 기울이고 골반을 오른쪽으로 밀어주세요");
+                yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
+                Vector3 current_lEarPos = jointPoints[PositionIndex.lEar.Int()].Pos3D; // 현재 왼쪽 귀 위치 확인
+                Vector3 current_rEarPos = jointPoints[PositionIndex.rEar.Int()].Pos3D; // 현재 왼쪽 귀 위치 확인
+                yield return new WaitForSeconds(10f); // 동작 수행시간 10초간 대기
+
+                // 원래 자세로 복귀
+                if (current_lEarPos.y >= original_lEarPos.y)
+                {
+                    Debug.Log("자세가 올바르지 못했어요!");
+                }
+                else
+                {
+                    Debug.Log("잘했어요!");
+                    successCount++;
+                }
+                lEar_timeCount++;
+                Debug.Log("고개를 바로 해주세요");
+                yield return new WaitForSeconds(5f);
+            }
+            else
+            {
+                Debug.Log("상체를 오른쪽으로 기울이고 골반을 왼쪽으로 밀어주세요");
+                yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
+                Vector3 current_lEarPos = jointPoints[PositionIndex.lEar.Int()].Pos3D; // 현재 왼쪽 귀 위치 확인
+                Vector3 current_rEarPos = jointPoints[PositionIndex.rEar.Int()].Pos3D; // 현재 왼쪽 귀 위치 확인
+                yield return new WaitForSeconds(10f); // 동작 수행시간 10초간 대기
+
+                // 원래 자세로 복귀
+                if (current_rEarPos.y >= original_rEarPos.y)
+                {
+                    Debug.Log("자세가 올바르지 못했어요!");
+                }
+                else
+                {
+                    Debug.Log("잘했어요!");
+                    successCount++;
+                }
+                rEar_timeCount++;
+                Debug.Log("고개를 바로 해주세요");
+                yield return new WaitForSeconds(5f);
+            }
+        }
+
+        if (successCount >= 5)
+        {
+            Debug.Log("모두 잘했습니다! 성공입니다!");
+        }
+        else
+        {
+            Debug.Log("다음엔 좀 더 잘해봐요!!");
+        }
+
+    }
+
+    float CalculateAngle(Vector3 headPos, Vector3 neckPos, Vector3 spinePos)
+    {
+        Vector3 vector1 = headPos - neckPos;
+        Vector3 vector2 = spinePos - neckPos;
+        return Vector3.Angle(vector1, vector2);
+    }
+
+    // Init() 메서드 및 PoseUpdate() 메서드는 이전과 동일하게 유지됨
+
+    // AddSkeleton() 메서드도 이전과 동일하게 유지됨
 
     /// <summary>
     /// Initialize joint points
@@ -281,7 +662,7 @@ public class VNectModel : MonoBehaviour
         var gaze = jointPoints[PositionIndex.Nose.Int()].Transform.position - jointPoints[PositionIndex.head.Int()].Transform.position;
         head.Inverse = Quaternion.Inverse(Quaternion.LookRotation(gaze));
         head.InverseRotation = head.Inverse * head.InitRotation;
-        
+
         var lHand = jointPoints[PositionIndex.lHand.Int()];
         var lf = TriangleNormal(lHand.Pos3D, jointPoints[PositionIndex.lMid1.Int()].Pos3D, jointPoints[PositionIndex.lThumb2.Int()].Pos3D);
         lHand.InitRotation = lHand.Transform.rotation;
@@ -354,7 +735,7 @@ public class VNectModel : MonoBehaviour
         var f = TriangleNormal(jointPoints[PositionIndex.Nose.Int()].Pos3D, jointPoints[PositionIndex.rEar.Int()].Pos3D, jointPoints[PositionIndex.lEar.Int()].Pos3D);
         var head = jointPoints[PositionIndex.head.Int()];
         head.Transform.rotation = Quaternion.LookRotation(gaze, f) * head.InverseRotation;
-        
+
         // Wrist rotation (Test code)
         var lHand = jointPoints[PositionIndex.lHand.Int()];
         var lf = TriangleNormal(lHand.Pos3D, jointPoints[PositionIndex.lMid1.Int()].Pos3D, jointPoints[PositionIndex.lThumb2.Int()].Pos3D);
@@ -408,11 +789,13 @@ public class VNectModel : MonoBehaviour
         sk.Line = sk.LineObject.AddComponent<LineRenderer>();
         sk.Line.startWidth = 0.04f;
         sk.Line.endWidth = 0.01f;
-        
+
         // define the number of vertex
         sk.Line.positionCount = 2;
         sk.Line.material = SkeletonMaterial;
 
         Skeletons.Add(sk);
     }
+
+
 }
