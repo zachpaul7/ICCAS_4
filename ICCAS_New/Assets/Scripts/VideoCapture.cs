@@ -16,7 +16,8 @@ public class VideoCapture : MonoBehaviour
     private WebCamTexture webCamTexture;
     private RenderTexture videoTexture;
 
-    private int videoScreenWidth = 2560;
+    private int videoScreenWidth;
+    private int videoScreenHeight;
     private int bgWidth, bgHeight;
 
     public RenderTexture MainTexture { get; private set; }
@@ -26,25 +27,29 @@ public class VideoCapture : MonoBehaviour
     /// </summary>
     /// <param name="bgWidth"></param>
     /// <param name="bgHeight"></param>
-    public void Init(int bgWidth, int bgHeight)
+    /// <param name="videoScreenWidth"></param>
+    /// <param name="videoScreenHeight"></param>
+    public void Init(int bgWidth, int bgHeight, int videoScreenWidth, int videoScreenHeight)
     {
         this.bgWidth = bgWidth;
         this.bgHeight = bgHeight;
-        if (UseWebCam) CameraPlayStart();
-        else VideoPlayStart();
+        this.videoScreenWidth = videoScreenWidth;
+        this.videoScreenHeight = videoScreenHeight;
+        if (UseWebCam) CameraPlayStart(videoScreenWidth, videoScreenHeight);
+        else VideoPlayStart(videoScreenWidth, videoScreenHeight);
     }
 
     /// <summary>
     /// Play Web Camera
     /// </summary>
-    private void CameraPlayStart()
+    private void CameraPlayStart(int screenWidth, int screenHeight)
     {
         WebCamDevice[] devices = WebCamTexture.devices;
-        if(devices.Length <= WebCamIndex)
+        if (devices.Length <= WebCamIndex)
         {
             WebCamIndex = 0;
         }
-        
+
         webCamTexture = new WebCamTexture(devices[WebCamIndex].name);
 
         var sd = VideoScreen.GetComponent<RectTransform>();
@@ -52,7 +57,8 @@ public class VideoCapture : MonoBehaviour
 
         webCamTexture.Play();
 
-        sd.sizeDelta = new Vector2(videoScreenWidth, videoScreenWidth * webCamTexture.height / webCamTexture.width);
+        // RawImage의 크기를 고정된 값으로 설정
+        sd.sizeDelta = new Vector2(screenWidth, screenHeight); // 여기서 고정된 높이를 설정합니다.
         var aspect = (float)webCamTexture.width / webCamTexture.height;
         VideoBackground.transform.localScale = new Vector3(aspect, 1, 1) * VideoBackgroundScale;
         VideoBackground.GetComponent<Renderer>().material.mainTexture = webCamTexture;
@@ -63,7 +69,7 @@ public class VideoCapture : MonoBehaviour
     /// <summary>
     /// Play video
     /// </summary>
-    private void VideoPlayStart()
+    private void VideoPlayStart(int screenWidth, int screenHeight)
     {
         videoTexture = new RenderTexture((int)VideoPlayer.clip.width, (int)VideoPlayer.clip.height, 24);
 
@@ -71,7 +77,8 @@ public class VideoCapture : MonoBehaviour
         VideoPlayer.targetTexture = videoTexture;
 
         var sd = VideoScreen.GetComponent<RectTransform>();
-        sd.sizeDelta = new Vector2(videoScreenWidth, (int)(videoScreenWidth * VideoPlayer.clip.height / VideoPlayer.clip.width));
+        // RawImage의 크기를 고정된 값으로 설정
+        sd.sizeDelta = new Vector2(screenWidth, screenHeight); // 여기서 고정된 높이를 설정합니다.
         VideoScreen.texture = videoTexture;
 
         VideoPlayer.Play();
@@ -99,7 +106,7 @@ public class VideoCapture : MonoBehaviour
 
         var camera = go.GetComponent<Camera>();
         camera.orthographic = true;
-        camera.orthographicSize = 0.5f ;
+        camera.orthographicSize = 0.5f;
         camera.depth = -5;
         camera.depthTextureMode = 0;
         camera.clearFlags = CameraClearFlags.Color;
