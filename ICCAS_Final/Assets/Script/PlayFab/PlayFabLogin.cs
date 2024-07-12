@@ -1,4 +1,4 @@
-using PlayFab;
+ï»¿using PlayFab;
 using PlayFab.ClientModels;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,79 +12,78 @@ public class PlayFabLogin : MonoBehaviour
 {
     public static PlayFabLogin instance;
 
-    //public TMP_InputField loginEmail, loginPassword;
-    //public TMP_InputField registerEmail, registerPassword, registerName;
-    public string emailInput, passwardInput, nameInput;
+    public TMP_InputField loginEmail, loginPassword;
+    public TMP_InputField registerEmail, registerPassword, registerName;
+    //public string emailInput, passwardInput, nameInput;
     public string myID;
     public string username;
-    //public LoginUI loginUI;
+    public LoginUI loginUI;
     public bool isSetName = false;
     public bool isLogin = false;
 
     private void Awake()
     {
-        // ½Ì±ÛÅæ ÀÎ½ºÅÏ½º ÃÊ±âÈ­
+        // Â½ÃŒÂ±Ã›Ã…Ã¦ Ã€ÃÂ½ÂºÃ…ÃÂ½Âº ÃƒÃŠÂ±Ã¢ÃˆÂ­
         instance = this;
 
-        EmailLogin();
+        //EmailLogin();
     }
 
     private void DisplayPlayfabError(PlayFabError error) => Debug.LogError("error : " + error.GenerateErrorReport());
 
-    #region ·Î±×ÀÎ & È¸¿ø°¡ÀÔ
+    #region Â·ÃÂ±Ã—Ã€Ã & ÃˆÂ¸Â¿Ã¸Â°Â¡Ã€Ã”
     public void EmailLogin()
     {
-        //InputField·Î ¹Ş¾Æ¿Ã¶§ »ç¿ë
-        //if (string.IsNullOrEmpty(PlayFabSettings.staticSettings.TitleId))
-        //{
-        //    PlayFabSettings.staticSettings.TitleId = "AC580";
-        //}
-        //var request = new LoginWithEmailAddressRequest { Email = loginEmail.text, Password = loginPassword.text };
-        //PlayFabClientAPI.LoginWithEmailAddress(request, OnLoginSuccess, OnLoginFailure);
+        //InputFieldÂ·Ã Â¹ÃÂ¾Ã†Â¿ÃƒÂ¶Â§ Â»Ã§Â¿Ã«
+        if (string.IsNullOrEmpty(PlayFabSettings.staticSettings.TitleId))
+        {
+            PlayFabSettings.staticSettings.TitleId = "AC580";
+        }
+        var request = new LoginWithEmailAddressRequest { Email = loginEmail.text, Password = loginPassword.text };
+        PlayFabClientAPI.LoginWithEmailAddress(request, OnLoginSuccess, OnLoginFailure);
 
-        //Å×½ºÆ®¿ë 
-        var request = new LoginWithEmailAddressRequest { Email = emailInput, Password = passwardInput };
-        PlayFabClientAPI.LoginWithEmailAddress(request, OnLoginSuccess, (error) => { print("·Î±×ÀÎ ½ÇÆĞ"); EmailRegister(); });
+        //Ã…Ã—Â½ÂºÃ†Â®Â¿Ã« 
+        //var request = new LoginWithEmailAddressRequest { Email = emailInput, Password = passwardInput };
+        //PlayFabClientAPI.LoginWithEmailAddress(request, OnLoginSuccess, (error) => { print("Â·ÃÂ±Ã—Ã€Ã Â½Ã‡Ã†Ã"); EmailRegister(); });
 
     }
 
     public void EmailRegister()
     {
-        //InputField·Î ¹Ş¾Æ¿Ã¶§ »ç¿ë
-        //if (string.IsNullOrEmpty(PlayFabSettings.staticSettings.TitleId))
-        //{
-        //    PlayFabSettings.staticSettings.TitleId = "AC580";
-        //}
-        //var request = new RegisterPlayFabUserRequest { Email = registerEmail.text, Password = registerPassword.text, Username = registerName.text };
-        //PlayFabClientAPI.RegisterPlayFabUser(request, OnRegisterSuccess, OnRegisterFailure);
+        //InputFieldÂ·Ã Â¹ÃÂ¾Ã†Â¿ÃƒÂ¶Â§ Â»Ã§Â¿Ã«
+        if (string.IsNullOrEmpty(PlayFabSettings.staticSettings.TitleId))
+        {
+            PlayFabSettings.staticSettings.TitleId = "AC580";
+        }
+        var request = new RegisterPlayFabUserRequest { Email = registerEmail.text, Password = registerPassword.text, Username = registerName.text };
+        PlayFabClientAPI.RegisterPlayFabUser(request, OnRegisterSuccess, OnRegisterFailure);
 
-        //Å×½ºÆ®¿ë 
-        var request = new RegisterPlayFabUserRequest { Email = emailInput, Password = passwardInput, Username = nameInput };
-        PlayFabClientAPI.RegisterPlayFabUser(request, (result) => { print("È¸¿ø°¡ÀÔ ¼º°ø"); EmailLogin(); username = result.Username; isSetName = true; }, (error) => { print("È¸¿ø°¡ÀÔ ½ÇÆĞ");});
+        //Ã…Ã—Â½ÂºÃ†Â®Â¿Ã« 
+        //var request = new RegisterPlayFabUserRequest { Email = emailInput, Password = passwardInput, Username = nameInput };
+        //PlayFabClientAPI.RegisterPlayFabUser(request, (result) => { print("ÃˆÂ¸Â¿Ã¸Â°Â¡Ã€Ã” Â¼ÂºÂ°Ã¸"); EmailLogin(); username = result.Username; isSetName = true; }, (error) => { print("ÃˆÂ¸Â¿Ã¸Â°Â¡Ã€Ã” Â½Ã‡Ã†Ã");});
 
     }
 
     private void OnLoginSuccess(LoginResult result)
     {
-        // ID ÀúÀå
+        // ID Ã€ÃºÃ€Ã¥
         myID = result.PlayFabId;
 
-        // DataBase¿¡ ÇÃ·¹ÀÌ¾î Á¤º¸ °¡Á®¿À±â
+        // DataBaseÂ¿Â¡ Ã‡ÃƒÂ·Â¹Ã€ÃŒÂ¾Ã® ÃÂ¤ÂºÂ¸ Â°Â¡ÃÂ®Â¿Ã€Â±Ã¢
         DataBase.instance.GetUserData();
 
-        Debug.Log("·Î±×ÀÎ ¼º°ø");
+        Debug.Log("ë¡œê·¸ì¸ ì„±ê³µ");
     }
 
     private void OnLoginFailure(PlayFabError error)
     {
-
-        //loginUI.LoginPanel(0);
-        Debug.Log("·Î±×ÀÎ ½ÇÆĞ");
+        loginUI.LoginPanel(0);
+        Debug.Log("ë¡œê·¸ì¸ ì‹¤íŒ¨");
     }
 
     private void OnRegisterSuccess(RegisterPlayFabUserResult result)
     {
-        Debug.Log("È¸¿ø°¡ÀÔ ¼º°ø");
+        Debug.Log("íšŒì›ê°€ì… ì„±ê³µ");
         username = result.Username;
 
         isSetName = true;
@@ -92,8 +91,8 @@ public class PlayFabLogin : MonoBehaviour
 
     private void OnRegisterFailure(PlayFabError error)
     {
-        //loginUI.SignUpPanel(0);
-        Debug.Log("È¸¿ø°¡ÀÔ ½ÇÆĞ");
+        loginUI.SignUpPanel(0);
+        Debug.Log("íšŒì›ê°€ì… ì‹¤íŒ¨");
     }
     #endregion
 }

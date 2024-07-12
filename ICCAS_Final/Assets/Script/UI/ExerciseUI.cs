@@ -397,16 +397,24 @@ public class ExerciseUI : MonoBehaviour
 
     public void OpenExerciseSelect()
     {
+        if (isDead)
+        {
+            Debug.Log(isDead);
+            isDead = false;
+            return;
+        }
+
         StartCoroutine(WaitOpenExerciseSelect());
     }
 
     IEnumerator WaitOpenExerciseSelect()
     {
-        yield return YieldCache.WaitForSeconds(5f);
+        yield return YieldCache.WaitForSeconds(7f);
         VNectModel.instance.parentTransform.SetActive(false);
         exercisePoseObj.SetActive(false);
         
         yield return YieldCache.WaitForSeconds(0.5f);
+
         exerciseSelectPanel.SetActive(true);
     }
 
@@ -456,6 +464,8 @@ public class ExerciseUI : MonoBehaviour
 
         if (GameManager.instance.ec[stageSelect].GetComponent<EnemyController>().isDead == true)
         {
+            isDead = true;
+
             yield return YieldCache.WaitForSeconds(0.4f);
 
             GameManager.instance.ec[stageSelect].GetComponent<EnemyController>().Dead();
@@ -469,6 +479,8 @@ public class ExerciseUI : MonoBehaviour
 
             if (GameManager.instance.pc[DataBase.instance.playerData.cSelect].GetComponent<PlayerController>().isDead == true)
             {
+                isDead = true;
+
                 yield return YieldCache.WaitForSeconds(0.4f);
 
                 GameManager.instance.pc[DataBase.instance.playerData.cSelect].GetComponent<PlayerController>().Dead();

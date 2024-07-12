@@ -251,10 +251,9 @@ public class VNectModel : MonoBehaviour
 
         parentTransform.SetActive(false);
 
-        if(GameManager.instance.ec[UIManager.instance.exUI.stageSelect].GetComponent<EnemyController>().isDead == false || GameManager.instance.pc[DataBase.instance.playerData.cSelect].GetComponent<PlayerController>().isDead == false)
-        {
-            UIManager.instance.exUI.OpenExerciseSelect();
-        }
+        yield return YieldCache.WaitForSeconds(3.5f);
+
+        UIManager.instance.exUI.OpenExerciseSelect();
     }
 
     IEnumerator StretchingCoroutine1() // 옆목 스트레칭
@@ -334,14 +333,11 @@ public class VNectModel : MonoBehaviour
         // 공격 로직
         UIManager.instance.exUI.Attack();
 
-        if (UIManager.instance.exUI.isDead)
-        {
-            parentTransform.SetActive(false);
-        }
-        else
-        {
-            UIManager.instance.exUI.OpenExerciseSelect();
-        }
+        parentTransform.SetActive(false);
+
+        yield return YieldCache.WaitForSeconds(3.5f);
+
+        UIManager.instance.exUI.OpenExerciseSelect();
     }
 
     IEnumerator StretchingCoroutine2() // 사이드 스트레칭
@@ -414,14 +410,11 @@ public class VNectModel : MonoBehaviour
         // 공격 로직
         UIManager.instance.exUI.Attack();
 
-        if (UIManager.instance.exUI.isDead)
-        {
-            parentTransform.SetActive(false);
-        }
-        else
-        {
-            UIManager.instance.exUI.OpenExerciseSelect();
-        }
+        parentTransform.SetActive(false);
+
+        yield return YieldCache.WaitForSeconds(3.5f);
+
+        UIManager.instance.exUI.OpenExerciseSelect();
     }
 
     IEnumerator StretchingCoroutine3() // 서서 허리 젖히기
@@ -472,14 +465,11 @@ public class VNectModel : MonoBehaviour
         // 공격 로직
         UIManager.instance.exUI.Attack();
 
-        if (UIManager.instance.exUI.isDead)
-        {
-            parentTransform.SetActive(false);
-        }
-        else
-        {
-            UIManager.instance.exUI.OpenExerciseSelect();
-        }
+        parentTransform.SetActive(false);
+
+        yield return YieldCache.WaitForSeconds(3.5f);
+
+        UIManager.instance.exUI.OpenExerciseSelect();
     }
 
     IEnumerator StretchingCoroutine4() // 상체내리기
@@ -529,14 +519,11 @@ public class VNectModel : MonoBehaviour
         // 공격 로직
         UIManager.instance.exUI.Attack();
 
-        if (UIManager.instance.exUI.isDead)
-        {
-            parentTransform.SetActive(false);
-        }
-        else
-        {
-            UIManager.instance.exUI.OpenExerciseSelect();
-        }
+        parentTransform.SetActive(false);
+
+        yield return YieldCache.WaitForSeconds(3.5f);
+
+        UIManager.instance.exUI.OpenExerciseSelect();
     }
 
     IEnumerator StretchingCoroutine5() // 반달자세
@@ -609,14 +596,11 @@ public class VNectModel : MonoBehaviour
         // 공격 로직
         UIManager.instance.exUI.Attack();
 
-        if (UIManager.instance.exUI.isDead)
-        {
-            parentTransform.SetActive(false);
-        }
-        else
-        {
-            UIManager.instance.exUI.OpenExerciseSelect();
-        }
+        parentTransform.SetActive(false);
+
+        yield return YieldCache.WaitForSeconds(3.5f);
+
+        UIManager.instance.exUI.OpenExerciseSelect();
     }
 
     float CalculateAngle(Vector3 headPos, Vector3 neckPos, Vector3 spinePos)
