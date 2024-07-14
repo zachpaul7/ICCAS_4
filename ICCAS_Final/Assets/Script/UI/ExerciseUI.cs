@@ -55,6 +55,9 @@ public class ExerciseUI : MonoBehaviour
     public TextMeshProUGUI characterBarText;
     public TextMeshProUGUI enemyBarText;
 
+    [Header("아이템 사용")]
+    public GameObject[] items;
+
     [Header("스테이지 클리어 / 실패")]
     public GameObject stageClearSuccessPanel;
     public GameObject stageClearFailedPanel;
@@ -532,11 +535,17 @@ public class ExerciseUI : MonoBehaviour
                 break;
         }
     }
+
+    public void SetItemTexts()
+    {
+        for(int i = 0; i < items.Length; i++)
+        {
+            items[i].transform.getchilde()
+        }
+    }
     #endregion
 
     #region 운동 종료 - 클리어 성공/실패
-    
-
     public void StageClearSuccess()
     {
         // 패널 열기전에 보상 세팅하기
