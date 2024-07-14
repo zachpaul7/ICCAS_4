@@ -57,6 +57,7 @@ public class ExerciseUI : MonoBehaviour
 
     [Header("아이템 사용")]
     public GameObject[] items;
+    
 
     [Header("스테이지 클리어 / 실패")]
     public GameObject stageClearSuccessPanel;
@@ -385,6 +386,7 @@ public class ExerciseUI : MonoBehaviour
         }
 
         UpdateHpBar();
+        SetItemTexts();
     }
 
 
@@ -432,7 +434,7 @@ public class ExerciseUI : MonoBehaviour
 
     #region 운동 플레이 - 공격, HP세팅
 
-    // AI 넣기전 테스트
+    // Exercise 선택
     public void SelectExercise(int index)
     {
         StartCoroutine(WaitDelay(index));
@@ -538,11 +540,40 @@ public class ExerciseUI : MonoBehaviour
 
     public void SetItemTexts()
     {
-        for(int i = 0; i < items.Length; i++)
+        for (int i = 0; i < items.Length; i++)
         {
-            items[i].transform.getchilde()
+            items[i].transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = DataBase.instance.playerData.itemAmount[i].ToString();
         }
     }
+
+    public void UseItem(int index)
+    {
+        DataBase.instance.playerData.itemAmount[index] -= 1;
+        SetItemTexts();
+
+        switch (index)
+        {
+            case 0:
+                if (GameManager.instance.pc[DataBase.instance.playerData.cSelect].GetComponent<PlayerController>().curHp < 
+                    GameManager.instance.pc[DataBase.instance.playerData.cSelect].GetComponent<PlayerController>().maxHp)
+                {
+                    GameManager.instance.pc[DataBase.instance.playerData.cSelect].GetComponent<PlayerController>().curHp += 200;
+                }
+                else
+                {
+                    GameManager.instance.pc[DataBase.instance.playerData.cSelect].GetComponent<PlayerController>().curHp += 200;
+                    GameManager.instance.pc[DataBase.instance.playerData.cSelect].GetComponent<PlayerController>().curHp = 
+                        GameManager.instance.pc[DataBase.instance.playerData.cSelect].GetComponent<PlayerController>().maxHp;
+                }
+
+                break;
+            case 1:
+                items[1].GetComponent<Button>().enabled = false;
+                break;
+        }
+    }
+
+
     #endregion
 
     #region 운동 종료 - 클리어 성공/실패

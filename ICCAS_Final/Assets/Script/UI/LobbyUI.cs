@@ -125,13 +125,21 @@ public class LobbyUI : MonoBehaviour
     {
         resultPrefabs = new GameObject[DataBase.instance.playerData.daily];
         int startDay = 0;
+        int forDay = 0;
 
         if (DataBase.instance.playerData.daily >= 30)
+        {
             startDay = DataBase.instance.playerData.daily - 30;
+            forDay = 30;
+        }
         else
+        {
             startDay = 0;
+            forDay = DataBase.instance.selfCheckScores.checkScore.Count;
+        }
+            
 
-        for (int i = 0; i < 30; i++)
+        for (int i = 0; i < forDay; i++)
         {
             resultPrefabs[i] = Instantiate(resultPrefab, resultPanel.transform.GetChild(1).GetChild(2).GetChild(0).GetChild(0).GetChild(0).transform);
 
