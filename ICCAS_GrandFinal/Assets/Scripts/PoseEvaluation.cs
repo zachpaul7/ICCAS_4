@@ -15,6 +15,7 @@ public class PoseEvaluation : MonoBehaviour
     public bool exerciseFin = false;
     public int eCountMax = 0;
     public int eCountCur = 0;
+    public int pM = 0;
     #endregion
 
     #region PoseSkeleton 객체를 위한 참조를 생성합니다.
@@ -76,10 +77,13 @@ public class PoseEvaluation : MonoBehaviour
                 StartCoroutine(StretchingCoroutine5());
                 break;
 
+            case 6:
+                StartCoroutine(pose_measure());
+                break;
+
             default:
                 Debug.Log("뭔가 문제가 있음");
                 break;
-
         }
     }
     #endregion
@@ -87,6 +91,8 @@ public class PoseEvaluation : MonoBehaviour
     #region 스트레칭 종류 IEnumerator 
     IEnumerator pose_measure() // 초반 자세 설정
     {
+        pM = 0;
+
         yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
         SoundManager.instance.PlaySFX("3");
         Debug.Log("우측으로 돌아 측면 전체가 보이게 서주세요");
@@ -106,14 +112,18 @@ public class PoseEvaluation : MonoBehaviour
 
         if (ab < 2 && ac < 2 && ad < 2 && bc < 2 && bd < 2 && bd < 2)
         {
+            UIManager.instance.lobbyUI.correct = 1;
             SoundManager.instance.PlaySFX("M2");
-            Debug.Log("올바른 자세입니다! 함께 디스크 예방으로 해봐요!");
+            Debug.Log("올바른 자세입니다! 함께 디스크 예방을 해봐요!");
         }
         else
         {
+            UIManager.instance.lobbyUI.correct = 2;
             SoundManager.instance.PlaySFX("M3");
             Debug.Log("자세가 올바르지 못해요. 함께 교정해봐요. 전문가와의 상담도 추천드립니다! ");
         }
+
+        exerciseFin = true;
     }
 
     IEnumerator StretchingCoroutine0() // 고개 숙이기 스트레칭

@@ -280,6 +280,18 @@ public class DataBase : MonoBehaviour
 
         SaveData(); // 업데이트된 데이터를 PlayFab에 저장합니다.
     }
+
+    public void AddPoseMeasureScore(int score)
+    {
+        selfCheckScores.poseScore.Add(score);
+
+        if (selfCheckScores.poseScore.Count > MaxScores)
+        {
+            selfCheckScores.poseScore.RemoveAt(0); // 가장 오래된 데이터를 삭제합니다.
+        }
+
+        SaveData(); // 업데이트된 데이터를 PlayFab에 저장합니다.
+    }
     #endregion
 }
 
@@ -320,6 +332,7 @@ public struct CharacterData
 public struct SelfCheckScore
 {
     public List<int> checkScore;
+    public List<int> poseScore;
 }
 
 [Serializable]
