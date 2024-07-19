@@ -7,6 +7,7 @@ using System.Reflection;
 using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 using UnityEngine.Video;
 
@@ -68,7 +69,13 @@ public class ExerciseUI : MonoBehaviour
     public GameObject stageClearSuccessPanel;
     public GameObject stageClearFailedPanel;
 
-    // 스테이지 보상 텍스트
+    [Header("스테이지 결과 텍스트")]
+    public List<string> resultExercise = new List<string>();
+    public List<string> resultScore = new List<string>(); 
+    public GameObject resultPrefab;
+    public GameObject resultParent;
+
+    [Header("스테이지 보상 텍스트")]
     public bool isDead = false;
     public TextMeshProUGUI[] stageExpReward;
     public TextMeshProUGUI[] stageGoldReward;
@@ -477,6 +484,30 @@ public class ExerciseUI : MonoBehaviour
         eMax = PoseEvaluation.instance.eCountMax;
         eCur = PoseEvaluation.instance.eCountCur;
 
+        resultScore.Add(eCur + " / " + eMax);
+
+        switch (index)
+        {
+            case 0:
+                resultExercise.Add("");
+                break;
+            case 1:
+                resultExercise.Add("Stretching the Side Neck");
+                break;
+            case 2:
+                resultExercise.Add("Side Stretching");
+                break;
+            case 3:
+                resultExercise.Add("Standing And Leaning Back");
+                break;
+            case 4:
+                resultExercise.Add("Lowering The Upper Body");
+                break;
+            case 5:
+                resultExercise.Add("Half-Moon Position");
+                break;
+        }
+
         Destroy(UIManager.instance.exUI.poseEstimator);
 
         mainC.GetComponent<Camera>().orthographic = true;
@@ -634,8 +665,23 @@ public class ExerciseUI : MonoBehaviour
     #endregion
 
     #region 운동 종료 - 클리어 성공/실패
+
+    private void SetStageClearText()
+    {
+        for(int i = 0; i < resultExercise.Count; i++)
+        {
+            GameObject resultPrefabs = Instantiate(resultPrefab, resultParent.transform);
+            resultPrefabs.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = i.ToString();
+            resultPrefabs.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = resultExercise[i];
+            resultPrefabs.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = resultScore[i];
+        }
+    }
+
+
     public void StageClear(int index)
     {
+        SetStageClearText();
+
         switch (index)
         {
             case 0:
@@ -676,8 +722,8 @@ public class ExerciseUI : MonoBehaviour
                 exercisePanel.SetActive(false);
                 break;
         }
-
     }
+
 
     public void OnClickContinue(int index)
     {
@@ -697,6 +743,9 @@ public class ExerciseUI : MonoBehaviour
                 stageClearFailedPanel.SetActive(false);
                 break;
         }
+
+        resultExercise.Clear();
+        resultScore.Clear();
 
         SoundManager.instance.StopBGM();
         SoundManager.instance.PlayBGM("Main");
