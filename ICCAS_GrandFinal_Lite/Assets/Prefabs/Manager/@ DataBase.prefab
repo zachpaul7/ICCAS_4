@@ -1,0 +1,196 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5394619541011896116
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7193230528167257364}
+  - component: {fileID: 8382188492178321676}
+  m_Layer: 0
+  m_Name: '@ DataBase'
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7193230528167257364
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5394619541011896116}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8382188492178321676
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5394619541011896116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa57bd62bafe9834090798a0d61910b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerData:
+    nickName: 
+    level: 0
+    exp: 0
+    gold: 9999999
+    curStage: 0
+    topStage: 0
+    cSelect: 0
+    daily: 0
+    lastSurveyDate: 2024-07-17
+    characterSkin: 0000000000000000
+    cSkinEquip: 0000000000000000000000000000000000000000000000000000000000000000
+    itemAmount: 00000000000000000000000000000000
+  characterData:
+    characterOpen: 0100000000000000
+    level: 0000000000000000000000000000000000000000000000000000000000000000
+    skinOpen: 0000000000000000
+  selfCheckScores:
+    checkScore: 
+    poseScore: 
+  upgradeData:
+  - maxLevel: 10
+    unlockGold: 0
+    upgradeGold: 500
+  - maxLevel: 10
+    unlockGold: 1000
+    upgradeGold: 1000
+  - maxLevel: 10
+    unlockGold: 1000
+    upgradeGold: 1000
+  - maxLevel: 10
+    unlockGold: 1500
+    upgradeGold: 1500
+  - maxLevel: 10
+    unlockGold: 2000
+    upgradeGold: 2000
+  - maxLevel: 10
+    unlockGold: 2500
+    upgradeGold: 2500
+  - maxLevel: 10
+    unlockGold: 3000
+    upgradeGold: 3000
+  - maxLevel: 10
+    unlockGold: 5000
+    upgradeGold: 5000
+  itemData:
+  - cost: 500
+    amount: 1
+  - cost: 500
+    amount: 1
+  - cost: 8000
+    amount: 1
+  settingInfo:
+    optionToggle: 0101
+  characterInfos:
+  - maxHp: 2c0100005e01000090010000c2010000f401000026020000580200008a020000bc020000ee020000
+    damage: 640000006e00000078000000820000008c00000096000000a0000000aa000000b4000000be000000
+  - maxHp: 90010000c2010000f401000026020000580200008a020000bc020000ee0200002003000052030000
+    damage: 96000000a0000000aa000000b4000000be000000c8000000d2000000dc000000e6000000f0000000
+  - maxHp: f401000026020000580200008a020000bc020000ee020000200300005203000084030000b6030000
+    damage: c8000000d2000000dc000000e6000000f0000000fa000000040100000e0100001801000022010000
+  - maxHp: 580200008a020000bc020000ee020000200300005203000084030000b6030000e80300001a040000
+    damage: fa000000040100000e01000018010000220100002c01000036010000400100004a01000054010000
+  - maxHp: bc020000ee020000200300005203000084030000b6030000e80300001a0400004c0400007e040000
+    damage: 2c01000036010000400100004a010000540100005e01000068010000720100007c01000086010000
+  - maxHp: 200300005203000084030000b6030000e80300001a0400004c0400007e040000b0040000e2040000
+    damage: 5e01000068010000720100007c01000086010000900100009a010000a4010000ae010000b8010000
+  - maxHp: 84030000b6030000e80300001a0400004c0400007e040000b0040000e20400001405000046050000
+    damage: 900100009a010000a4010000ae010000b8010000c2010000cc010000d6010000e0010000ea010000
+  - maxHp: e80300001a0400004c0400007e040000b0040000e2040000140500004605000078050000aa050000
+    damage: c2010000cc010000d6010000e0010000ea010000f4010000fe01000008020000120200001c020000
+  enemyInfos:
+  - maxHp: 500
+    damage: 50
+    gold: 500
+  - maxHp: 600
+    damage: 50
+    gold: 600
+  - maxHp: 700
+    damage: 50
+    gold: 700
+  - maxHp: 800
+    damage: 75
+    gold: 800
+  - maxHp: 1200
+    damage: 100
+    gold: 1000
+  - maxHp: 900
+    damage: 100
+    gold: 900
+  - maxHp: 1000
+    damage: 100
+    gold: 1000
+  - maxHp: 1100
+    damage: 125
+    gold: 1100
+  - maxHp: 1200
+    damage: 125
+    gold: 1200
+  - maxHp: 1700
+    damage: 150
+    gold: 1400
+  - maxHp: 1300
+    damage: 150
+    gold: 1300
+  - maxHp: 1400
+    damage: 150
+    gold: 1400
+  - maxHp: 1500
+    damage: 175
+    gold: 1500
+  - maxHp: 1600
+    damage: 175
+    gold: 1600
+  - maxHp: 2000
+    damage: 200
+    gold: 1800
+  - maxHp: 1700
+    damage: 200
+    gold: 1700
+  - maxHp: 1800
+    damage: 200
+    gold: 1800
+  - maxHp: 1900
+    damage: 225
+    gold: 1900
+  - maxHp: 2000
+    damage: 225
+    gold: 2000
+  - maxHp: 2400
+    damage: 250
+    gold: 2200
+  - maxHp: 2100
+    damage: 250
+    gold: 2100
+  - maxHp: 2200
+    damage: 250
+    gold: 2200
+  - maxHp: 2300
+    damage: 275
+    gold: 2300
+  - maxHp: 2400
+    damage: 275
+    gold: 2400
+  - maxHp: 3000
+    damage: 300
+    gold: 3000
+  playerInfo:
+    maxExp: 64000000c80000002c01000090010000f401000058020000bc0200002003000084030000e80300004c040000b00400001405000078050000dc05000040060000a4060000080700006c070000d0070000
+    rewardExp: 6400000096000000c8000000fa0000002c0100005e01000090010000c2010000f401000026020000580200008a020000bc020000ee020000200300005203000084030000b6030000e80300001a0400004c0400007e040000b0040000e204000014050000
