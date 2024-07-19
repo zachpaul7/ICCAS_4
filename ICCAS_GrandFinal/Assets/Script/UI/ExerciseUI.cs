@@ -49,7 +49,6 @@ public class ExerciseUI : MonoBehaviour
     [Header("Exercise 관련")]
     public int exerciseNum;  // 어떤 운동을 선택했는지 확인
     public GameObject mainC;
-
     public TextMeshProUGUI[] stageTexts;
     public GameObject exercisePanel;
     public GameObject exerciseSelectPanel;
@@ -64,7 +63,6 @@ public class ExerciseUI : MonoBehaviour
     public TextMeshProUGUI enemyBarText;
     public float eMax = 0;
     public float eCur = 0;
-
 
     [Header("스테이지 클리어 / 실패")]
     public GameObject stageClearSuccessPanel;
@@ -367,6 +365,8 @@ public class ExerciseUI : MonoBehaviour
     // 선택한 던전 스테이지 열기 - player와 enemy 스텟 및 HP바 세팅
     public void OpenExercisPanel()
     {
+        SoundManager.instance.PlayBGM("Battle");
+
         for (int i = 0; i < GameManager.instance.pcNS.Length; i++)
         {
             if (i == DataBase.instance.playerData.cSelect)
@@ -428,28 +428,7 @@ public class ExerciseUI : MonoBehaviour
         exerciseExplainPanel[index].SetActive(true);
     }
 
-    //public void OpenExerciseSelect()
-    //{
-    //    if (isDead)
-    //    {
-    //        Debug.Log(isDead);
-    //        isDead = false;
-    //        return;
-    //    }
-
-    //    StartCoroutine(WaitOpenExerciseSelect());
-    //}
-
-    //IEnumerator WaitOpenExerciseSelect()
-    //{
-    //    yield return YieldCache.WaitForSeconds(7f);
-    //    //VNectModel.instance.parentTransform.SetActive(false);
-    //    exercisePoseObj.SetActive(false);
-
-    //    yield return YieldCache.WaitForSeconds(0.5f);
-
-    //    exerciseSelectPanel.SetActive(true);
-    //}
+    
     #endregion
 
     #region 운동 준비 - 운동 설명
@@ -484,6 +463,9 @@ public class ExerciseUI : MonoBehaviour
         // poseEstimator 생성
         poseEstimator = Instantiate(exPosePrefab);
 
+        if(poseEstimator != null)
+            PoseEvaluation.instance.exerciseFin = false;
+
         Debug.Log("포즈 시작");
 
         yield return YieldCache.WaitForSeconds(2);
@@ -504,6 +486,10 @@ public class ExerciseUI : MonoBehaviour
         yield return YieldCache.WaitForSeconds(2);
 
         Attack();
+
+        yield return YieldCache.WaitForSeconds(3);
+
+        OpenExerciseSelect();
     }
 
     // 공격 로직
@@ -567,6 +553,27 @@ public class ExerciseUI : MonoBehaviour
         }
     }
 
+    // 공격후 운동 선택 로직 열기
+    public void OpenExerciseSelect()
+    {
+        if (isDead)
+        {
+            Debug.Log("isDead / " + isDead);
+            isDead = false;
+            return;
+        }
+        else if(!isDead)
+        {
+            StartCoroutine(WaitOpenExerciseSelect());
+        }
+    }
+
+    IEnumerator WaitOpenExerciseSelect()
+    {
+        yield return YieldCache.WaitForSeconds(7f);
+        exerciseSelectPanel.SetActive(true);
+    }
+
     // HP 텍스트, Bar 업데이트
     public void UpdateHpBar()
     {
@@ -582,7 +589,7 @@ public class ExerciseUI : MonoBehaviour
                 float cCurHp = 0;
                 int cMaxHp = 0;
 
-                if (DataBase.instance.playerData.cSkinEquip[index] == 1)
+                if (DataBase.instance.playerData.cSkinEquip[setNum] == 1)
                 {
                     cCurHp = (float)GameManager.instance.pcS[setNum].GetComponent<PlayerController>().curHp;
                     cMaxHp = GameManager.instance.pcS[setNum].GetComponent<PlayerController>().maxHp;
@@ -639,7 +646,11 @@ public class ExerciseUI : MonoBehaviour
                 stageClearSuccessPanel.SetActive(true);
 
                 // 나머지 다 끄기
-                GameManager.instance.pcNS[DataBase.instance.playerData.cSelect].SetActive(false);
+                if (DataBase.instance.playerData.cSkinEquip[DataBase.instance.playerData.cSelect] == 1)
+                    GameManager.instance.pcS[DataBase.instance.playerData.cSelect].SetActive(false);
+                else
+                    GameManager.instance.pcNS[DataBase.instance.playerData.cSelect].SetActive(false);
+
                 GameManager.instance.ec[stageSelect].SetActive(false);
                 exercisePanel.SetActive(false);
 
@@ -656,14 +667,16 @@ public class ExerciseUI : MonoBehaviour
                 stageClearFailedPanel.SetActive(true);
 
                 // 나머지 다 끄기
-                GameManager.instance.pcNS[DataBase.instance.playerData.cSelect].SetActive(false);
+                if (DataBase.instance.playerData.cSkinEquip[DataBase.instance.playerData.cSelect] == 1)
+                    GameManager.instance.pcS[DataBase.instance.playerData.cSelect].SetActive(false);
+                else
+                    GameManager.instance.pcNS[DataBase.instance.playerData.cSelect].SetActive(false);
+
                 GameManager.instance.ec[stageSelect].SetActive(false);
                 exercisePanel.SetActive(false);
                 break;
         }
 
-
-        
     }
 
     public void OnClickContinue(int index)
@@ -684,6 +697,9 @@ public class ExerciseUI : MonoBehaviour
                 stageClearFailedPanel.SetActive(false);
                 break;
         }
+
+        SoundManager.instance.StopBGM();
+        SoundManager.instance.PlayBGM("Main");
     }
 
     // 각 스테이지별 보상 수령

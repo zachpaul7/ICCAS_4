@@ -113,20 +113,25 @@ public class PoseEvaluation : MonoBehaviour
         if (ab < 2 && ac < 2 && ad < 2 && bc < 2 && bd < 2 && bd < 2)
         {
             UIManager.instance.lobbyUI.correct = 1;
+
             SoundManager.instance.PlaySFX("M2");
+            yield return new WaitForSeconds(5f);
             Debug.Log("올바른 자세입니다! 함께 디스크 예방을 해봐요!");
         }
         else
         {
             UIManager.instance.lobbyUI.correct = 2;
+
             SoundManager.instance.PlaySFX("M3");
+            yield return new WaitForSeconds(7f);
+
             Debug.Log("자세가 올바르지 못해요. 함께 교정해봐요. 전문가와의 상담도 추천드립니다! ");
         }
 
         exerciseFin = true;
     }
 
-    IEnumerator StretchingCoroutine0() // 고개 숙이기 스트레칭
+    IEnumerator StretchingCoroutine0() // 고개 숙이기 스트레칭(안씀)
     {
         int timeCount = 0;
         int successCount = 0;
@@ -189,18 +194,18 @@ public class PoseEvaluation : MonoBehaviour
         int righttimeCount = 0;
 
         yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
+
         SoundManager.instance.PlaySFX("2");
         Debug.Log("정면을 보고 전신이 보이게 제대로 서주세요");
-
         yield return new WaitForSeconds(5f); // 자세 준비시간 5초간 대기
+
         SoundManager.instance.PlaySFX("4");
         Debug.Log("스트레칭을 시작해볼까요?");
+        yield return new WaitForSeconds(3f); // 자세 준비시간 2초간 대기
 
-        yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
         SoundManager.instance.PlaySFX("5");
         Debug.Log("동작을 왼쪽부터 수행합니다");
-
-        yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
+        yield return new WaitForSeconds(3f); // 자세 준비시간 2초간 대기
 
         while (timeCount < 6)
         {
@@ -211,9 +216,8 @@ public class PoseEvaluation : MonoBehaviour
 
                 SoundManager.instance.PlaySFX("S11");
                 Debug.Log("목을 왼쪽으로 늘려주세요");
+                yield return new WaitForSeconds(7f); // 자세 준비시간 & 동작 준비 7초간 대기
 
-                yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
-                yield return new WaitForSeconds(5f); // 동작 수행시간 5초간 대기
                 float currentleftEarPosition = leftEarPosition.y; // 현재 왼쪽 귀 위치 확인
                 yield return new WaitForSeconds(5f); // 동작 수행시간 5초간 대기
 
@@ -222,18 +226,23 @@ public class PoseEvaluation : MonoBehaviour
                 {
                     SoundManager.instance.PlaySFX("S12");
                     Debug.Log("자세가 올바르지 못했어요. 목을 좀 더 늘려주세요.");
+                    yield return new WaitForSeconds(5f);
                 }
                 else
                 {
                     SoundManager.instance.PlaySFX("6");
                     Debug.Log("잘했어요!");
+                    yield return new WaitForSeconds(1f);
+
                     successCount++;
+
                 }
                 lefttimeCount++;
 
                 SoundManager.instance.PlaySFX("7");
                 Debug.Log("시작자세로 돌아와주세요.");
                 yield return new WaitForSeconds(5f);
+
                 timeCount++;
             }
             else
@@ -243,9 +252,8 @@ public class PoseEvaluation : MonoBehaviour
 
                 SoundManager.instance.PlaySFX("S13");
                 Debug.Log("목을 오른쪽으로 늘려주세요");
+                yield return new WaitForSeconds(7f);
 
-                yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
-                yield return new WaitForSeconds(5f); // 동작 수행시간 5초간 대기
                 float currentrightEarPosition = rightEarPosition.y;
                 yield return new WaitForSeconds(5f); // 동작 수행시간 5초간 대기
 
@@ -254,11 +262,14 @@ public class PoseEvaluation : MonoBehaviour
                 {
                     SoundManager.instance.PlaySFX("S12");
                     Debug.Log("자세가 올바르지 못했어요. 목을 좀 더 늘려주세요.");
+                    yield return new WaitForSeconds(5f);
                 }
                 else
                 {
                     SoundManager.instance.PlaySFX("6");
                     Debug.Log("잘했어요!");
+                    yield return new WaitForSeconds(1f);
+
                     successCount++;
                 }
 
@@ -276,15 +287,17 @@ public class PoseEvaluation : MonoBehaviour
         {
             SoundManager.instance.PlaySFX("8");
             Debug.Log("잘했습니다! 성공입니다!");
+            yield return new WaitForSeconds(3f);
         }
         else
         {
             SoundManager.instance.PlaySFX("9");
             Debug.Log("다음엔 좀 더 잘해봐요!!");
+            yield return new WaitForSeconds(3f);
         }
 
         eCountMax = 6;
-        eCountCur = 3;
+        eCountCur = successCount;
 
         yield return YieldCache.WaitForSeconds(3);
 
@@ -297,19 +310,20 @@ public class PoseEvaluation : MonoBehaviour
         int successCount = 0;
         int lefttimeCount = 0;
         int righttimeCount = 0;
+
         yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
+
         SoundManager.instance.PlaySFX("2");
         Debug.Log("정면을 보고 전신이 보이게 제대로 서주세요");
+        yield return new WaitForSeconds(5f); // 자세 준비시간 5초간 대기
 
-        yield return new WaitForSeconds(5f); // 자세 준비시간 2초간 대기
         SoundManager.instance.PlaySFX("4");
         Debug.Log("스트레칭을 시작해볼까요?");
-
         yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
+
         SoundManager.instance.PlaySFX("5");
         Debug.Log("동작을 왼쪽부터 수행합니다.");
-
-        yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
+        yield return new WaitForSeconds(3f); // 자세 준비시간 2초간 대기
 
         while (timeCount < 4)
         {
@@ -320,9 +334,8 @@ public class PoseEvaluation : MonoBehaviour
 
                 SoundManager.instance.PlaySFX("S21");
                 Debug.Log("허리를 왼쪽으로 굽혀주세요");
+                yield return new WaitForSeconds(7f); // 자세 준비시간 2초간 대기
 
-                yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
-                yield return new WaitForSeconds(5f); // 동작 수행시간 5초간 대기
                 float currentleftEarPosition = leftEarPosition.y; // 현재 왼쪽 귀 위치 확인
                 yield return new WaitForSeconds(5f); // 동작 수행시간 5초간 대기
 
@@ -331,20 +344,24 @@ public class PoseEvaluation : MonoBehaviour
                 {
                     SoundManager.instance.PlaySFX("S22");
                     Debug.Log("자세가 올바르지 못했어요. 허리를 좀 더 굽혀주세요.");
+                    yield return new WaitForSeconds(4f);
                 }
                 else
                 {
                     SoundManager.instance.PlaySFX("6");
                     Debug.Log("잘했어요!");
+                    yield return new WaitForSeconds(1f);
+
                     successCount++;
                 }
+
                 lefttimeCount++;
 
                 SoundManager.instance.PlaySFX("7");
                 Debug.Log("시작자세로 돌아와주세요.");
+                yield return new WaitForSeconds(5f);
 
                 timeCount++;
-                yield return new WaitForSeconds(5f);
             }
             else
             {
@@ -353,9 +370,8 @@ public class PoseEvaluation : MonoBehaviour
 
                 SoundManager.instance.PlaySFX("S23");
                 Debug.Log("허리를 오른쪽으로 굽혀주세요");
+                yield return new WaitForSeconds(7f); // 자세 준비시간 2초간 대기
 
-                yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
-                yield return new WaitForSeconds(5f); // 동작 수행시간 5초간 대기
                 float currentrightEarPosition = rightEyePosition.y;
                 yield return new WaitForSeconds(5f); // 동작 수행시간 5초간 대기
 
@@ -364,11 +380,14 @@ public class PoseEvaluation : MonoBehaviour
                 {
                     SoundManager.instance.PlaySFX("S22");
                     Debug.Log("자세가 올바르지 못했어요. 허리를 좀 더 굽혀주세요.");
+                    yield return new WaitForSeconds(4f);
                 }
                 else
                 {
                     SoundManager.instance.PlaySFX("6");
                     Debug.Log("잘했어요!");
+                    yield return new WaitForSeconds(1f);
+
                     successCount++;
                 }
 
@@ -376,9 +395,9 @@ public class PoseEvaluation : MonoBehaviour
 
                 SoundManager.instance.PlaySFX("7");
                 Debug.Log("시작자세로 돌아와주세요");
+                yield return new WaitForSeconds(5f);
 
                 timeCount++;
-                yield return new WaitForSeconds(5f);
             }
         }
 
@@ -386,11 +405,13 @@ public class PoseEvaluation : MonoBehaviour
         {
             SoundManager.instance.PlaySFX("8");
             Debug.Log("잘했습니다! 성공입니다!");
+            yield return new WaitForSeconds(3f);
         }
         else
         {
             SoundManager.instance.PlaySFX("9");
             Debug.Log("다음엔 좀 더 잘해봐요!!");
+            yield return new WaitForSeconds(3f);
         }
 
         eCountMax = 4;
@@ -405,23 +426,23 @@ public class PoseEvaluation : MonoBehaviour
     {
         int timeCount = 0;
         int successCount = 0;
+
         yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
+
         SoundManager.instance.PlaySFX("3");
         Debug.Log("우측으로 돌아 측면 전체가 보이게 서주세요");
-
         yield return new WaitForSeconds(5f); // 자세 준비시간 2초간 대기
+
         SoundManager.instance.PlaySFX("4");
         Debug.Log("스트레칭을 시작해볼까요?");
-
         yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
 
         while (timeCount < 5)
         {
             SoundManager.instance.PlaySFX("S31");
             Debug.Log("몸을 뒤로 젖혀주세요");
+            yield return new WaitForSeconds(7f); // 자세 준비시간 2초간 대기
 
-            yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
-            yield return new WaitForSeconds(5f); // 동작 수행시간 5초간 대기
             float currentAngle = CalculateAngle(leftShoulderPosition,
                                                 leftHipPosition,
                                                 leftAnklePosition);
@@ -432,31 +453,35 @@ public class PoseEvaluation : MonoBehaviour
             {
                 SoundManager.instance.PlaySFX("S32");
                 Debug.Log("자세가 올바르지 못했어요. 좀 더 뒤로 젖혀주세요.");
+                yield return new WaitForSeconds(5f);
             }
             else
             {
                 SoundManager.instance.PlaySFX("6");
                 Debug.Log("잘했어요!");
+                yield return new WaitForSeconds(1f);
+
                 successCount++;
             }
 
             SoundManager.instance.PlaySFX("7");
             Debug.Log("시작자세로 돌아와주세요");
-
-            timeCount++;
             yield return new WaitForSeconds(5f);
 
+            timeCount++;
         }
 
         if (successCount >= 4)
         {
             SoundManager.instance.PlaySFX("8");
             Debug.Log("잘했습니다! 성공입니다!");
+            yield return new WaitForSeconds(3f);
         }
         else
         {
             SoundManager.instance.PlaySFX("9");
             Debug.Log("다음엔 좀 더 잘해봐요!!");
+            yield return new WaitForSeconds(3f);
         }
 
         eCountMax = 5;
@@ -472,21 +497,21 @@ public class PoseEvaluation : MonoBehaviour
         int timeCount = 0;
         int successCount = 0;
         yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
+
         SoundManager.instance.PlaySFX("3");
         Debug.Log("우측으로 돌아 측면 전체가 보이게 서주세요");
-
         yield return new WaitForSeconds(5f); // 자세 준비시간 2초간 대기
+
         SoundManager.instance.PlaySFX("4");
         Debug.Log("스트레칭을 시작해볼까요?");
-
         yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
 
         while (timeCount < 3)
         {
             SoundManager.instance.PlaySFX("S41");
             Debug.Log("상체를 숙여주세요");
-            yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
-            yield return new WaitForSeconds(5f); // 동작 수행시간 10초간 대기
+            yield return new WaitForSeconds(7f); // 자세 준비시간 2초간 대기
+
             float currentAngle = CalculateAngle(leftShoulderPosition,
                                                 leftHipPosition,
                                                 leftKneePosition);
@@ -495,36 +520,40 @@ public class PoseEvaluation : MonoBehaviour
                                                 leftAnklePosition);
             yield return new WaitForSeconds(5f); // 동작 수행시간 10초간 대기
 
-
             // 원래 자세로 복귀
             if (currentAngle > 90 && legAngle < 170)
             {
                 SoundManager.instance.PlaySFX("S42");
                 Debug.Log("상체를 좀 더 숙여주세요.");
+                yield return new WaitForSeconds(5f);
             }
             else
             {
                 SoundManager.instance.PlaySFX("6");
                 Debug.Log("잘했어요!");
+                yield return new WaitForSeconds(1f);
+
                 successCount++;
             }
 
             SoundManager.instance.PlaySFX("7");
             Debug.Log("시작자세로 돌아와주세요");
-            timeCount++;
             yield return new WaitForSeconds(5f);
 
+            timeCount++;
         }
 
         if (successCount >= 4)
         {
             SoundManager.instance.PlaySFX("8");
             Debug.Log("잘했습니다! 성공입니다!");
+            yield return new WaitForSeconds(3f);
         }
         else
         {
             SoundManager.instance.PlaySFX("9");
             Debug.Log("다음엔 좀 더 잘해봐요!!");
+            yield return new WaitForSeconds(3f);
         }
 
         eCountMax = 3;
@@ -541,14 +570,15 @@ public class PoseEvaluation : MonoBehaviour
         int successCount = 0;
         int lefttimeCount = 0;
         int righttimeCount = 0;
+
         yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
+
         SoundManager.instance.PlaySFX("2");
         Debug.Log("전신이 보이게 제대로 서주세요");
-
         yield return new WaitForSeconds(5f); // 자세 준비시간 2초간 대기
+
         SoundManager.instance.PlaySFX("4");
         Debug.Log("스트레칭을 시작해볼까요?");
-
         yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
 
         while (timeCount < 6)
@@ -560,8 +590,8 @@ public class PoseEvaluation : MonoBehaviour
 
                 SoundManager.instance.PlaySFX("S51");
                 Debug.Log("상체를 왼쪽으로 기울이고 골반을 오른쪽으로 밀어주세요");
-                yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
-                yield return new WaitForSeconds(5f); // 동작 수행시간 5초간 대기
+                yield return new WaitForSeconds(7f); // 자세 준비시간 2초간 대기
+
                 float currentleftShoulderPosition = leftShoulderPosition.y;
                 float currentrightHipPosition = rightHipPosition.x;
                 yield return new WaitForSeconds(5f); // 동작 수행시간 5초간 대기
@@ -571,11 +601,14 @@ public class PoseEvaluation : MonoBehaviour
                 {
                     SoundManager.instance.PlaySFX("S52");
                     Debug.Log("자세가 올바르지 못했어요. 상체를 좀 더 기울이고 골반을 밀어주세요");
+                    yield return new WaitForSeconds(6f);
                 }
                 else
                 {
                     SoundManager.instance.PlaySFX("6");
                     Debug.Log("잘했어요!");
+                    yield return new WaitForSeconds(1f);
+
                     successCount++;
                 }
 
@@ -583,9 +616,9 @@ public class PoseEvaluation : MonoBehaviour
 
                 SoundManager.instance.PlaySFX("7");
                 Debug.Log("시작자세로 돌아와주세요");
-                timeCount++;
                 yield return new WaitForSeconds(5f);
 
+                timeCount++;
             }
             else
             {
@@ -594,7 +627,8 @@ public class PoseEvaluation : MonoBehaviour
 
                 SoundManager.instance.PlaySFX("S53");
                 Debug.Log("상체를 오른쪽으로 기울이고 골반을 왼쪽으로 밀어주세요");
-                yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
+                yield return new WaitForSeconds(7f); // 자세 준비시간 2초간 대기
+
                 float currentrightShoulderPosition = rightShoulderPosition.y;
                 float currentleftHipPosition = leftHipPosition.x;
                 yield return new WaitForSeconds(10f); // 동작 수행시간 10초간 대기
@@ -604,19 +638,24 @@ public class PoseEvaluation : MonoBehaviour
                 {
                     SoundManager.instance.PlaySFX("S52");
                     Debug.Log("자세가 올바르지 못했어요. 상체를 좀 더 기울이고 골반을 밀어주세요.");
+                    yield return new WaitForSeconds(6f);
                 }
                 else
                 {
                     SoundManager.instance.PlaySFX("6");
                     Debug.Log("잘했어요!");
+                    yield return new WaitForSeconds(1f);
+
                     successCount++;
                 }
+
                 righttimeCount++;
+
                 SoundManager.instance.PlaySFX("7");
                 Debug.Log("시작자세로 돌아와주세요");
-                timeCount++;
                 yield return new WaitForSeconds(5f);
 
+                timeCount++;
             }
         }
 
@@ -624,11 +663,13 @@ public class PoseEvaluation : MonoBehaviour
         {
             SoundManager.instance.PlaySFX("8");
             Debug.Log("잘했습니다! 성공입니다!");
+            yield return new WaitForSeconds(3f);
         }
         else
         {
             SoundManager.instance.PlaySFX("9");
             Debug.Log("다음엔 좀 더 잘해봐요!!");
+            yield return new WaitForSeconds(3f);
         }
 
         eCountMax = 6;

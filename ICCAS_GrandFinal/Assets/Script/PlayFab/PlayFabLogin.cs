@@ -71,19 +71,21 @@ public class PlayFabLogin : MonoBehaviour
 
         // DataBase¿¡ ÇÃ·¹ÀÌ¾î Á¤º¸ °¡Á®¿À±â
         DataBase.instance.GetUserData();
-
+        SoundManager.instance.PlaySFX("Reward");
         Debug.Log("로그인 성공");
     }
 
     private void OnLoginFailure(PlayFabError error)
     {
         loginUI.LoginPanel(0);
+        SoundManager.instance.PlaySFX("CancelBtn");
         Debug.Log("로그인 실패");
     }
 
     private void OnRegisterSuccess(RegisterPlayFabUserResult result)
     {
         Debug.Log("회원가입 성공");
+        SoundManager.instance.PlaySFX("Reward");
         username = result.Username;
 
         isSetName = true;
@@ -92,6 +94,7 @@ public class PlayFabLogin : MonoBehaviour
     private void OnRegisterFailure(PlayFabError error)
     {
         loginUI.SignUpPanel(0);
+        SoundManager.instance.PlaySFX("CancelBtn");
         Debug.Log("회원가입 실패");
     }
     #endregion

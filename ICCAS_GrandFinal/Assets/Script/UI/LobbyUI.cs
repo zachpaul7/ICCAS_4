@@ -45,6 +45,7 @@ public class LobbyUI : MonoBehaviour
     public void InitLobbyUI()
     {
         profile.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = DataBase.instance.playerData.nickName;
+        profilePanel.transform.GetChild(1).GetChild(2).GetChild(1).GetComponent<TextMeshProUGUI>().text = DataBase.instance.playerData.nickName;
         DataBase.instance.AddPlayerLv(0);
     }
     #endregion

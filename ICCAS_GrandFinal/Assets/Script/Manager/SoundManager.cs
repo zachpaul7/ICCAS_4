@@ -32,7 +32,16 @@ public class SoundManager : MonoBehaviour
 
     private void Awake()
     {
-        instance = this;
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
+        DontDestroyOnLoad(gameObject);
     }
 
     private void Start()
@@ -85,6 +94,12 @@ public class SoundManager : MonoBehaviour
                 break;
         }
     }
+
+    public void StopBGM()
+    {
+        bgmPlayer.Stop();
+    }
+
     #endregion
 
     #region SFX ¼³Á¤

@@ -10,14 +10,21 @@ public class LoginUI : MonoBehaviour
     public GameObject[] panels;
     public GameObject[] loginBtns;
 
+    private void Start()
+    {
+        SoundManager.instance.PlayBGM("Main");
+    }
+
     #region UI
     public void OpenPanel(GameObject gameObjs)
     {
+        SoundManager.instance.PlaySFX("ClickBtn");
         gameObjs.SetActive(true);
     }
 
     public void ClosePanel(GameObject gameObjs)
     {
+        SoundManager.instance.PlaySFX("CancelBtn");
         gameObjs.SetActive(false);
     }
 
@@ -31,6 +38,8 @@ public class LoginUI : MonoBehaviour
         DataBase.instance.SaveData();
 
         Debug.Log("게임으로 넘어갑니다.");
+
+        SoundManager.instance.StopBGM();
         SceneManager.LoadScene(1);
     }
     #endregion
