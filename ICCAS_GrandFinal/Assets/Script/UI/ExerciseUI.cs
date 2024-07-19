@@ -57,6 +57,11 @@ public class ExerciseUI : MonoBehaviour
     public GameObject exPosePrefab;
     public GameObject poseEstimator;
 
+    [Header("Exercise 아나운스/카운트 텍스트")]
+    public GameObject announcePanel;
+    public TextMeshProUGUI announceText;
+    public TextMeshProUGUI countText;
+
     [Header("캐릭터 및 적 채력바")]
     public Image characterBar;
     public Image enemyBar;
@@ -71,7 +76,8 @@ public class ExerciseUI : MonoBehaviour
 
     [Header("스테이지 결과 텍스트")]
     public List<string> resultExercise = new List<string>();
-    public List<string> resultScore = new List<string>(); 
+    public List<string> resultScore = new List<string>();
+    public List<Color> resultColor = new List<Color>();
     public GameObject resultPrefab;
     public GameObject resultParent;
 
@@ -252,7 +258,7 @@ public class ExerciseUI : MonoBehaviour
         {
             for (int i = 0; i < 5; i++)
             {
-                if(i == stageNum)
+                if (i == stageNum)
                 {
                     SelectStageIcon(1, i);
                 }
@@ -260,10 +266,10 @@ public class ExerciseUI : MonoBehaviour
                 {
                     SelectStageIcon(2, i);
                 }
-                
+
             }
         }
-        else if(chapterSelect == (DataBase.instance.playerData.topStage / 5))
+        else if (chapterSelect == (DataBase.instance.playerData.topStage / 5))
         {
             for (int i = 0; i < 5; i++)
             {
@@ -274,7 +280,7 @@ public class ExerciseUI : MonoBehaviour
                 else
                 {
                     int stage = (DataBase.instance.playerData.topStage % 5);
-                    
+
                     if (i < stage)
                     {
                         SelectStageIcon(2, i);
@@ -337,7 +343,7 @@ public class ExerciseUI : MonoBehaviour
         int chapterNum = DataBase.instance.playerData.topStage / 5;
         int stageNum = DataBase.instance.playerData.topStage % 5;
 
-        if(index < chapterNum)
+        if (index < chapterNum)
         {
             for (int i = 0; i < 5; i++)
             {
@@ -348,7 +354,7 @@ public class ExerciseUI : MonoBehaviour
         {
             for (int i = 0; i < 5; i++)
             {
-                if(i <= stageNum) 
+                if (i <= stageNum)
                 {
                     slBtns[chapterNum][i].SetActive(false);
                 }
@@ -389,7 +395,7 @@ public class ExerciseUI : MonoBehaviour
                     GameManager.instance.pcNS[i].SetActive(true);
                     GameManager.instance.pcNS[i].GetComponent<PlayerController>().SetStat(i);
                 }
-                    
+
             }
             else
             {
@@ -435,7 +441,7 @@ public class ExerciseUI : MonoBehaviour
         exerciseExplainPanel[index].SetActive(true);
     }
 
-    
+
     #endregion
 
     #region 운동 준비 - 운동 설명
@@ -459,7 +465,7 @@ public class ExerciseUI : MonoBehaviour
     {
         StartCoroutine(WaitDelay(index));
     }
-    
+
     IEnumerator WaitDelay(int index)
     {
         exerciseSelectPanel.SetActive(false);
@@ -470,7 +476,7 @@ public class ExerciseUI : MonoBehaviour
         // poseEstimator 생성
         poseEstimator = Instantiate(exPosePrefab);
 
-        if(poseEstimator != null)
+        if (poseEstimator != null)
             PoseEvaluation.instance.exerciseFin = false;
 
         Debug.Log("포즈 시작");
@@ -481,10 +487,21 @@ public class ExerciseUI : MonoBehaviour
 
         yield return new WaitUntil(() => PoseEvaluation.instance.exerciseFin);
 
+
+
         eMax = PoseEvaluation.instance.eCountMax;
         eCur = PoseEvaluation.instance.eCountCur;
 
         resultScore.Add(eCur + " / " + eMax);
+
+        if ((eCur / eMax) > 0.5)
+        {
+            resultColor.Add(Color.green);
+        }
+        else
+        {
+            resultColor.Add(Color.red);
+        }
 
         switch (index)
         {
@@ -507,6 +524,10 @@ public class ExerciseUI : MonoBehaviour
                 resultExercise.Add("Half-Moon Position");
                 break;
         }
+
+        announceText.text = string.Empty;
+        countText.text = string.Empty;
+        announcePanel.SetActive(false);
 
         Destroy(UIManager.instance.exUI.poseEstimator);
 
@@ -593,7 +614,7 @@ public class ExerciseUI : MonoBehaviour
             isDead = false;
             return;
         }
-        else if(!isDead)
+        else if (!isDead)
         {
             StartCoroutine(WaitOpenExerciseSelect());
         }
@@ -630,7 +651,7 @@ public class ExerciseUI : MonoBehaviour
                     cCurHp = (float)GameManager.instance.pcNS[setNum].GetComponent<PlayerController>().curHp;
                     cMaxHp = GameManager.instance.pcNS[setNum].GetComponent<PlayerController>().maxHp;
                 }
-                
+
 
                 if (cCurHp < 0)
                 {
@@ -668,15 +689,15 @@ public class ExerciseUI : MonoBehaviour
 
     private void SetStageClearText()
     {
-        for(int i = 0; i < resultExercise.Count; i++)
+        for (int i = 0; i < resultExercise.Count; i++)
         {
             GameObject resultPrefabs = Instantiate(resultPrefab, resultParent.transform);
             resultPrefabs.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = i.ToString();
             resultPrefabs.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = resultExercise[i];
             resultPrefabs.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = resultScore[i];
+            resultPrefabs.GetComponent<Image>().color = resultColor[i];
         }
     }
-
 
     public void StageClear(int index)
     {
@@ -723,7 +744,6 @@ public class ExerciseUI : MonoBehaviour
                 break;
         }
     }
-
 
     public void OnClickContinue(int index)
     {
