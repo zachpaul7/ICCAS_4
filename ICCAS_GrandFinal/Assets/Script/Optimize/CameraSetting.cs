@@ -25,4 +25,6 @@ public class CameraSetting : MonoBehaviour
         }
         cam.rect = rect;
     }
+
+    void OnPreCull() => GL.Clear(true, true, Color.black);
 }

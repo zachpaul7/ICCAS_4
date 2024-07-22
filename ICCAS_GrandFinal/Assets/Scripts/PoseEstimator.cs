@@ -219,8 +219,8 @@ public class PoseEstimator : MonoBehaviour
             preProcessFunction = Utils.PreprocessResNet;
             // Compile the model asset into an object oriented representation
             m_RunTimeModel = ModelLoader.Load(resnetModelAsset);
-            displacementFWDLayer = m_RunTimeModel.outputs[3];
-            displacementBWDLayer = m_RunTimeModel.outputs[2];
+            displacementFWDLayer = m_RunTimeModel.outputs[2];
+            displacementBWDLayer = m_RunTimeModel.outputs[3];
         }
 
         heatmapLayer = m_RunTimeModel.outputs[0];
@@ -253,20 +253,20 @@ public class PoseEstimator : MonoBehaviour
         for (int i = 0; i < maxPoses; i++) skeletons[i] = new PoseSkeleton(parentsObj, pointScale, lineWidth);
     }
 
-    /*private void RotateCameraForWebcam()
+    private void RotateCameraForWebcam()
     {
         // Find the Main Camera GameObject
         GameObject mainCamera = GameObject.Find("Main Camera");
 
         // Rotate the camera left by 90 degrees for webcam input
         mainCamera.transform.rotation = Quaternion.Euler(0, 0, 90);
-    }*/
+    }
 
 
     // Start is called before the first frame update
     void Start()
     {
-        //RotateCameraForWebcam();
+        RotateCameraForWebcam();
         if (useWebcam)
         {
             // Limit application framerate to the target webcam framerate

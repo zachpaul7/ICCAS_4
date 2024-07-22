@@ -304,18 +304,48 @@ public class LobbyUI : MonoBehaviour
             
             // 자가진단
             resultPrefabs[i].transform.GetChild(2).GetChild(0).GetComponent<Image>().fillAmount = (float)DataBase.instance.selfCheckScores.checkScore[i] / 7;
-            resultPrefabs[i].transform.GetChild(2).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = DataBase.instance.selfCheckScores.checkScore[i] + "/7";
+            resultPrefabs[i].transform.GetChild(2).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = 
+                DataBase.instance.selfCheckScores.checkScore[i] + "/7";
 
             // 중립 자세
-            resultPrefabs[i].transform.GetChild(2).GetChild(1).GetComponent<Image>().fillAmount = ((float)DataBase.instance.selfCheckScores.poseScore[i] / 6);
-            resultPrefabs[i].transform.GetChild(2).GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = (((float)DataBase.instance.selfCheckScores.poseScore[i] / 6) * 100) + "%";
+            if (DataBase.instance.selfCheckScores.poseScore.Count == 0)
+            {
+                resultPrefabs[i].transform.GetChild(2).GetChild(1).GetComponent<Image>().fillAmount = 0;
+                resultPrefabs[i].transform.GetChild(2).GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = "0%";
+            }
+            else
+            {
+                resultPrefabs[i].transform.GetChild(2).GetChild(1).GetComponent<Image>().fillAmount = ((float)DataBase.instance.selfCheckScores.poseScore[i] / 6);
+                resultPrefabs[i].transform.GetChild(2).GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = 
+                    (((float)DataBase.instance.selfCheckScores.poseScore[i] / 6) * 100).ToString("F1") + "%";
+            }
 
             // 운동 점수
-            resultPrefabs[i].transform.GetChild(2).GetChild(2).GetComponent<Image>().fillAmount = 
-                ((float)DataBase.instance.selfCheckScores.exCur[i] / DataBase.instance.selfCheckScores.exMax[i]);
-            resultPrefabs[i].transform.GetChild(2).GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>().text = 
-                (((float)DataBase.instance.selfCheckScores.poseScore[i] / DataBase.instance.selfCheckScores.exMax[i]) * 100) + "%";
+            if(DataBase.instance.selfCheckScores.exCur.Count == 0 || DataBase.instance.selfCheckScores.exMax.Count == 0)
+            {
+
+                resultPrefabs[i].transform.GetChild(2).GetChild(2).GetComponent<Image>().fillAmount = 0;
+                resultPrefabs[i].transform.GetChild(2).GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>().text = "0%";
+            }
+            else
+            {
+
+                resultPrefabs[i].transform.GetChild(2).GetChild(2).GetComponent<Image>().fillAmount =
+                    ((float)DataBase.instance.selfCheckScores.exCur[i] / DataBase.instance.selfCheckScores.exMax[i]);
+                resultPrefabs[i].transform.GetChild(2).GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>().text =
+                    (((float)DataBase.instance.selfCheckScores.exCur[i] / DataBase.instance.selfCheckScores.exMax[i]) * 100).ToString("F1") + "%";
+            }
         }
+    }
+
+    public void CloseResult(GameObject gameObject)
+    {
+        for (int i = 0; i < resultPrefabs.Length; i++)
+        {
+            Destroy(resultPrefabs[i]);
+        }
+
+        gameObject.SetActive(false);
     }
 
     public void OpenResult()

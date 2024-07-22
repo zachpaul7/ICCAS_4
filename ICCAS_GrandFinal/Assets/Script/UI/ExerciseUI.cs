@@ -63,6 +63,7 @@ public class ExerciseUI : MonoBehaviour
     public TextMeshProUGUI announceText;
     public TextMeshProUGUI countText;
     public GameObject breakPanel;
+    public GameObject breakConfirmPanel;
 
     [Header("Exercise 시간초 카운팅")]
     public GameObject timerObj;
@@ -546,9 +547,12 @@ public class ExerciseUI : MonoBehaviour
 
         Attack();
 
-        yield return YieldCache.WaitForSeconds(3);
+        if (!isDead)
+        {
+            yield return YieldCache.WaitForSeconds(2f);
 
-        OpenBreakPanel();
+            StartCoroutine(OpenBreakPanel());
+        }
     }
 
     // 공격 로직
@@ -612,8 +616,11 @@ public class ExerciseUI : MonoBehaviour
         }
     }
 
-    public void OpenBreakPanel()
+    // 휴식 패널 열기
+    IEnumerator OpenBreakPanel()
     {
+        yield return YieldCache.WaitForSeconds(3);
+
         breakPanel.SetActive(true);
     }
 
@@ -624,6 +631,39 @@ public class ExerciseUI : MonoBehaviour
         OpenExerciseSelect();
     }
 
+    // 게임 중지
+    public void StopExerciseGame()
+    {
+        // 나머지 다 끄기
+        if (DataBase.instance.playerData.cSkinEquip[DataBase.instance.playerData.cSelect] == 1)
+            GameManager.instance.pcS[DataBase.instance.playerData.cSelect].SetActive(false);
+        else
+            GameManager.instance.pcNS[DataBase.instance.playerData.cSelect].SetActive(false);
+
+        GameManager.instance.ec[stageSelect].SetActive(false);
+        exercisePanel.SetActive(false);
+        breakPanel.SetActive(false);
+        breakConfirmPanel.SetActive(false);
+
+        UnlockChpater();
+        UnlockStage(DataBase.instance.playerData.topStage);
+        SelectStage(DataBase.instance.playerData.topStage % 5);
+
+        resultExercise.Clear();
+        resultScore.Clear();
+
+        SoundManager.instance.StopBGM();
+        SoundManager.instance.PlayBGM("Main");
+    }
+
+    // 설명화면에서 뒤로가기
+    public void ExplainEscape(GameObject gameObject)
+    {
+        exerciseSelectPanel.SetActive(true);
+        gameObject.SetActive(false);
+    }
+
+    // 데미지 표시
     public void ShowDamageText(int index, int dmg)
     {
         switch (index)
