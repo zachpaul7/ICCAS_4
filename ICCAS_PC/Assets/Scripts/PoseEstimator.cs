@@ -266,7 +266,7 @@ public class PoseEstimator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        RotateCameraForWebcam();
+        //RotateCameraForWebcam();
         if (useWebcam)
         {
             // Limit application framerate to the target webcam framerate
