@@ -106,16 +106,13 @@ public class PoseEvaluation : MonoBehaviour
         UIManager.instance.exUI.announceText.text = "Turn to your right so your entire side profile is visible.";
 
         yield return new WaitForSeconds(5f); // 자세 준비시간 2초간 대기
-
-        UIManager.instance.exUI.ExerciseTimer(5);
-        UIManager.instance.exUI.timerObj.SetActive(true);
+        UIManager.instance.exUI.ExerciseTimer(3);
 
         SoundManager.instance.PlaySFX("M1");
         Debug.Log("자세측정을 시작하겠습니다.");
         UIManager.instance.exUI.announceText.text = "Let's start measuring your posture.";
 
         yield return new WaitForSeconds(5f); // 자세 준비시간 2초간 대기
-        UIManager.instance.exUI.timerObj.SetActive(false);
 
         float LEP = leftEarPosition.x;
         float LSP = leftShoulderPosition.x;
@@ -128,6 +125,8 @@ public class PoseEvaluation : MonoBehaviour
         float bc = Mathf.Abs(LSP - LHP);
         float bd = Mathf.Abs(LSP - LAP);
         float cd = Mathf.Abs(LHP - LAP);
+
+        yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
 
         if (ab < 2)
         {
@@ -243,26 +242,26 @@ public class PoseEvaluation : MonoBehaviour
         Debug.Log("정면을 보고 전신이 보이게 제대로 서주세요");
         UIManager.instance.exUI.announceText.text = "Stand facing forward with your whole body visible.";
 
-        yield return new WaitForSeconds(2f); // 자세 준비시간 5초간 대기
-
         UIManager.instance.exUI.ExerciseTimer(3);
-        UIManager.instance.exUI.timerObj.SetActive(true);
+
+        yield return new WaitForSeconds(2f); // 자세 준비시간 5초간 대기
 
         float originalleftEarPosition = leftEarPosition.y;
         float originalrightEarPosition = rightEarPosition.y;
 
         yield return new WaitForSeconds(3f); // 자세 준비시간 5초간 대기
-        UIManager.instance.exUI.timerObj.SetActive(false);
 
         SoundManager.instance.PlaySFX("4");
         Debug.Log("스트레칭을 시작해볼까요?");
         UIManager.instance.exUI.announceText.text = "Shall we start stretching?";
+
         yield return new WaitForSeconds(3f); // 자세 준비시간 2초간 대기
 
         SoundManager.instance.PlaySFX("5");
         Debug.Log("동작을 왼쪽부터 수행합니다");
         UIManager.instance.exUI.announceText.text = "Let's start with movements on the left side.";
-        yield return new WaitForSeconds(3f); // 자세 준비시간 2초간 대기
+
+        yield return YieldCache.WaitForSeconds(3f); // 자세 준비시간 2초간 대기
 
         while (timeCount < maxCount)
         {
@@ -276,15 +275,13 @@ public class PoseEvaluation : MonoBehaviour
                 yield return new WaitForSeconds(2f); // 자세 준비시간 & 동작 준비 7초간 대기
 
                 UIManager.instance.exUI.ExerciseTimer(10);
-                UIManager.instance.exUI.timerObj.SetActive(true);
-                
 
-                yield return new WaitForSeconds(5f); // 동작 수행시간 5초간 대기
+                yield return YieldCache.WaitForSeconds(5f); // 동작 수행시간 5초간 대기
 
                 float currentleftEarPosition = leftEarPosition.y; // 현재 왼쪽 귀 위치 확인
 
-                yield return new WaitForSeconds(5f); // 동작 수행시간 5초간 대기
-                UIManager.instance.exUI.timerObj.SetActive(false);
+                yield return YieldCache.WaitForSeconds(5f); // 동작 수행시간 5초간 대기
+                yield return YieldCache.WaitForSeconds(2f); // 자세 준비시간 & 동작 준비 7초간 대기
 
                 // 원래 자세로 복귀
                 if (currentleftEarPosition <= originalleftEarPosition + 5)
@@ -322,14 +319,12 @@ public class PoseEvaluation : MonoBehaviour
                 yield return new WaitForSeconds(2f);
 
                 UIManager.instance.exUI.ExerciseTimer(10);
-                UIManager.instance.exUI.timerObj.SetActive(true);
 
                 yield return new WaitForSeconds(5f); // 동작 수행시간 5초간 대기
 
                 float currentrightEarPosition = rightEarPosition.y;
                 yield return new WaitForSeconds(5f); // 동작 수행시간 5초간 대기
-
-                UIManager.instance.exUI.timerObj.SetActive(false);
+                yield return new WaitForSeconds(2f); // 동작 수행시간 5초간 대기
 
                 // 원래 자세로 복귀
                 if (currentrightEarPosition <= originalrightEarPosition + 5)
@@ -361,8 +356,6 @@ public class PoseEvaluation : MonoBehaviour
                 timeCount++;
             }
         }
-
-        UIManager.instance.exUI.countText.text = string.Empty;
 
         if (successCount >= 5)
         {
@@ -403,7 +396,9 @@ public class PoseEvaluation : MonoBehaviour
         Debug.Log("정면을 보고 전신이 보이게 제대로 서주세요");
         UIManager.instance.exUI.announceText.text = "Stand facing forward with your whole body visible.";
 
-        yield return new WaitForSeconds(5f); // 자세 준비시간 5초간 대기
+        UIManager.instance.exUI.ExerciseTimer(5);
+
+        yield return new WaitForSeconds(3f); // 자세 준비시간 5초간 대기
 
         float originalleftEarPosition = leftEarPosition.y;
         float originalrightEarPosition = rightEarPosition.y;
@@ -435,14 +430,11 @@ public class PoseEvaluation : MonoBehaviour
                 yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
 
                 UIManager.instance.exUI.ExerciseTimer(10);
-                UIManager.instance.exUI.timerObj.SetActive(true);
 
                 yield return new WaitForSeconds(5f); // 자세 준비시간 2초간 대기
 
                 float currentleftEarPosition = leftEarPosition.y; // 현재 왼쪽 귀 위치 확인
-                yield return new WaitForSeconds(5f); // 동작 수행시간 5초간 대기
-
-                UIManager.instance.exUI.timerObj.SetActive(false);
+                yield return new WaitForSeconds(7f); // 동작 수행시간 5초간 대기
 
                 // 원래 자세로 복귀
                 if (currentleftEarPosition <= originalleftEarPosition + 2)
@@ -483,14 +475,11 @@ public class PoseEvaluation : MonoBehaviour
                 yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
 
                 UIManager.instance.exUI.ExerciseTimer(10);
-                UIManager.instance.exUI.timerObj.SetActive(true);
 
                 yield return new WaitForSeconds(5f); // 자세 준비시간 2초간 대기
 
                 float currentrightEarPosition = rightEyePosition.y;
-                yield return new WaitForSeconds(5f); // 동작 수행시간 5초간 대기
-
-                UIManager.instance.exUI.timerObj.SetActive(false);
+                yield return new WaitForSeconds(7f); // 동작 수행시간 5초간 대기
 
                 // 원래 자세로 복귀
                 if (currentrightEarPosition <= originalrightEarPosition + 2)
@@ -580,16 +569,13 @@ public class PoseEvaluation : MonoBehaviour
             yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
 
             UIManager.instance.exUI.ExerciseTimer(10);
-            UIManager.instance.exUI.timerObj.SetActive(true);
 
             yield return new WaitForSeconds(5f); // 동작 수행시간 5초간 대기
 
             float currentAngle = CalculateAngle(leftShoulderPosition,
                                                 leftHipPosition,
                                                 leftAnklePosition);
-            yield return new WaitForSeconds(5f); // 동작 수행시간 5초간 대기
-
-            UIManager.instance.exUI.timerObj.SetActive(true);
+            yield return new WaitForSeconds(7f); // 동작 수행시간 5초간 대기
 
             // 원래 자세로 복귀
             if (currentAngle > 160)
@@ -677,7 +663,6 @@ public class PoseEvaluation : MonoBehaviour
             yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
 
             UIManager.instance.exUI.ExerciseTimer(10);
-            UIManager.instance.exUI.timerObj.SetActive(true);
 
             yield return new WaitForSeconds(5f); // 자세 준비시간 2초간 대기
 
@@ -687,9 +672,7 @@ public class PoseEvaluation : MonoBehaviour
             float legAngle = CalculateAngle(leftHipPosition,
                                                 leftKneePosition,
                                                 leftAnklePosition);
-            yield return new WaitForSeconds(5f); // 동작 수행시간 10초간 대기
-
-            UIManager.instance.exUI.timerObj.SetActive(false);
+            yield return new WaitForSeconds(7f); // 동작 수행시간 10초간 대기
 
             // 원래 자세로 복귀
             if (currentAngle > 90 && legAngle < 170)
@@ -787,17 +770,14 @@ public class PoseEvaluation : MonoBehaviour
                 UIManager.instance.exUI.announceText.text = "Tilt your upper body to the left and push your pelvis to the right.";
 
                 yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
-
+                
                 UIManager.instance.exUI.ExerciseTimer(10);
-                UIManager.instance.exUI.timerObj.SetActive(true);
 
                 yield return new WaitForSeconds(5f); // 자세 준비시간 2초간 대기
 
                 float currentleftShoulderPosition = leftShoulderPosition.y;
                 float currentrightHipPosition = rightHipPosition.x;
-                yield return new WaitForSeconds(5f); // 동작 수행시간 5초간 대기
-
-                UIManager.instance.exUI.timerObj.SetActive(false);
+                yield return new WaitForSeconds(7f); // 동작 수행시간 5초간 대기
 
                 // 원래 자세로 복귀
                 if (currentleftShoulderPosition <= originalleftShoulderPosition && currentrightHipPosition >= originalrightHipPosition)
@@ -836,17 +816,15 @@ public class PoseEvaluation : MonoBehaviour
                 UIManager.instance.exUI.announceText.text = "Tilt your upper body to the right and push your pelvis to the left.";
 
                 yield return new WaitForSeconds(2f); // 자세 준비시간 2초간 대기
-
+                
                 UIManager.instance.exUI.ExerciseTimer(10);
-                UIManager.instance.exUI.timerObj.SetActive(true);
 
                 yield return new WaitForSeconds(5f); // 자세 준비시간 2초간 대기
 
                 float currentrightShoulderPosition = rightShoulderPosition.y;
                 float currentleftHipPosition = leftHipPosition.x;
-                yield return new WaitForSeconds(10f); // 동작 수행시간 10초간 대기
 
-                UIManager.instance.exUI.timerObj.SetActive(false);
+                yield return new WaitForSeconds(7f); // 동작 수행시간 10초간 대기
 
                 // 원래 자세로 복귀
                 if (currentrightShoulderPosition <= originalrightShoulderPosition && currentleftHipPosition <= originalleftHipPosition)

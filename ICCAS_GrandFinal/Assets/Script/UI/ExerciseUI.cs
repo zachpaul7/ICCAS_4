@@ -58,10 +58,11 @@ public class ExerciseUI : MonoBehaviour
     public GameObject exPosePrefab;
     public GameObject poseEstimator;
 
-    [Header("Exercise 아나운스/카운트 텍스트")]
+    [Header("Exercise 아나운스/카운트 텍스트/휴식")]
     public GameObject announcePanel;
     public TextMeshProUGUI announceText;
     public TextMeshProUGUI countText;
+    public GameObject breakPanel;
 
     [Header("Exercise 시간초 카운팅")]
     public GameObject timerObj;
@@ -449,8 +450,6 @@ public class ExerciseUI : MonoBehaviour
         exerciseSelectPanel.SetActive(false);
         exerciseExplainPanel[index].SetActive(true);
     }
-
-    
     #endregion
 
     #region 운동 준비 - 운동 설명
@@ -468,7 +467,6 @@ public class ExerciseUI : MonoBehaviour
     #endregion
 
     #region 운동 플레이 - 공격, HP세팅, Dmg텍스트, 운동 카운트
-
     // Exercise 선택후 딜레이를 주고 
     public void SelectExercise(int index)
     {
@@ -550,7 +548,7 @@ public class ExerciseUI : MonoBehaviour
 
         yield return YieldCache.WaitForSeconds(3);
 
-        OpenExerciseSelect();
+        OpenBreakPanel();
     }
 
     // 공격 로직
@@ -612,6 +610,18 @@ public class ExerciseUI : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void OpenBreakPanel()
+    {
+        breakPanel.SetActive(true);
+    }
+
+    public void OnClickNextBtn()
+    {
+        breakPanel.SetActive(false);
+
+        OpenExerciseSelect();
     }
 
     public void ShowDamageText(int index, int dmg)
@@ -678,7 +688,7 @@ public class ExerciseUI : MonoBehaviour
 
     IEnumerator WaitOpenExerciseSelect()
     {
-        yield return YieldCache.WaitForSeconds(7f);
+        yield return null;
         exerciseSelectPanel.SetActive(true);
     }
 
@@ -741,6 +751,7 @@ public class ExerciseUI : MonoBehaviour
 
     public void ExerciseTimer(int index)
     {
+        timerText.text = string.Empty;
         StartCoroutine(ExerciseTimerCoroutine(index));
     }
 
@@ -748,18 +759,24 @@ public class ExerciseUI : MonoBehaviour
     {
         int curTime = 0;
 
-        while (curTime <= endTime)
+        timerText.text = endTime + "s";
+        timerObj.SetActive(true);
+
+        while (curTime < endTime)
         {
             timerText.text = (endTime - curTime) + "s";
 
-            yield return YieldCache.WaitForSecondsRealTime(1f);
+            yield return YieldCache.WaitForSeconds(1f);
 
             curTime++;
         }
 
         timerText.text = (endTime - curTime) + "s";
-    }
 
+        yield return YieldCache.WaitForSeconds(0.5f);
+
+        timerObj.SetActive(false);
+    }
     #endregion
 
     #region 운동 종료 - 클리어 성공/실패
